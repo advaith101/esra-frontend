@@ -47,6 +47,8 @@ export default {
     return {
      //reqPayload: {},
      chartData:[],
+     startDate: "6/01/2020",
+     endDate: "12/27/2020",
     // selectedEntities:[],
     series:[],
       activityChartSeries: [],
@@ -100,7 +102,9 @@ export default {
         },
         xaxis: {
          //  categories: ['1','2','3','4','5','6','7','8','9','10'],
-                tickAmount: 10,
+          //tickAmount: 10,
+          type:'category',
+          categories:[this.startDate,this.endDate],
           labels: {
             show:false,
             rotate:0,
@@ -125,10 +129,11 @@ export default {
   //    //return this.$store.state.selectedEntities;
   //   },
   // },
-  mounted() {
+  created() {
      
     this.$watch(vm => [vm.dateRange,vm.timeMode,vm.selectedApps,vm.mode],async val => {
-     await this.getActivityChartData();      
+     await this.getActivityChartData();
+     this.getDates();      
     }, {
      // immediate: true, // run immediately
       deep: true // detects changes inside objects. not needed here, but maybe in other cases
@@ -149,6 +154,35 @@ export default {
   },
 
   methods: {
+    getDates(){
+      if(this.timeMode==5){
+        this.startDate=moment(this.dateRange.startDate).format('MM/DD/YYYY');
+        this.endDate=moment(this.dateRange.endDate).format('MM/DD/YYYY');
+      }
+      else if(this.timeMode==0){
+        this.startDate=moment().subtract(1,'days').format('MM/DD/YYYY');
+        this.endDate=moment().format('MM/DD/YYYY');
+      }
+      else if(this.timeMode==1){
+        this.startDate=moment().subtract(5,'days').format('MM/DD/YYYY');
+        this.endDate=moment().format('MM/DD/YYYY');
+      }
+      else if(this.timeMode==2){
+        this.startDate=moment().subtract(1,'months').format('MM/DD/YYYY');
+        this.endDate=moment().format('MM/DD/YYYY');
+      }
+      else if(this.timeMode==3){
+        this.startDate=moment().subtract(6,'months').format('MM/DD/YYYY');
+        this.endDate=moment().format('MM/DD/YYYY');
+      }
+      else if(this.timeMode==4){
+        this.startDate=moment().subtract(1,'days').format('MM/DD/YYYY');
+        this.endDate=moment().format('MM/DD/YYYY');
+      }
+      console.log('start date:',this.startDate)
+      console.log('end date:',this.endDate)
+    },
+
     getRequestPayload() {
       var teamIDs = this.selectedEntities.filter(x => x.type === "team" && x.isSelected).map(y => y.id);
       var userIDs = this.selectedEntities.filter(x => x.type === "user" && x.isSelected).map(y => y.id);
@@ -202,9 +236,8 @@ export default {
             var entity = this.selectedEntities.filter(x => x.id === data.id && x.type === data.type)[0];
             colors = [... colors,entity.color];
              this.activityChartSeries.push({       
-             
               name: entity.name,                
-            data:data.values.map(x =>parseInt(x.value))
+              data:data.values.map(x =>parseInt(x.value))
             });
             description.push(data.values.map(x =>x.app));
             // categories.push(
@@ -221,8 +254,8 @@ export default {
             ...{
               xaxis: {
                 ...this.activityOptions.xaxis,
-              //  type: "datetime",
-                // categories: [1,2,3,4,5,6,7,8,9,10],
+                //type: "datetime",
+                //categories: [this.startDate,this.endDate],
                 // tickAmount: 10,
               },
               tooltip: { y: { formatter: (val,opt) => { 

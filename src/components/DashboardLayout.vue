@@ -91,9 +91,9 @@
                       </v-list>
                   </v-menu>
                 </v-expansion-panel-header>
-                <v-expansion-panel-content>
+                <v-expansion-panel-content style="min-height:350px">
                   <hr />
-                  <VueSlickCarousel :arrows="true" :dots="true" style="margin-bottom:5px">
+                  <VueSlickCarousel :arrows="true" :dots="true" style="margin-bottom:10px">
                     <div>
                       <ActivityChart :selectedEntities="selectedEntitiesforActivity" :timeMode="timeMode" :dateRange="dateRange" :selectedApps="selectedApps" :mode="selectedActivityforTotal"/>
                     </div>
@@ -141,7 +141,7 @@
                     </v-list>
                    </v-menu>
                    </v-expansion-panel-header>
-                <v-expansion-panel-content>
+                <v-expansion-panel-content style="min-height:350px">
                   <hr />
                   <v-btn-toggle
                   v-model="selectedGraphMode"
@@ -157,7 +157,7 @@
             Weekly
           </v-btn>
                   </v-btn-toggle>
-                  <IndividualInsightChart @updateTitle="updateTitle" ref="insightChart" 
+                  <IndividualInsightChart style="margin-top:10px" @updateTitle="updateTitle" ref="insightChart" 
                   :selectedEntities="selectedEntitiesforInsight" :dateRange="dateRange" :timeMode="timeMode" :selectedApps="selectedApps" :graphMode="selectedGraphMode"  />
                 </v-expansion-panel-content>
               </v-expansion-panel>
@@ -424,9 +424,9 @@ export default {
           {id:'idletime',title:"Idle Time",color:"#202031"},
         ],      
       selectedActivityforRadar:'activity',
-      selectedActivityTextforRadar:'Activity',
+      selectedActivityTextforRadar:'Interaction',
        selectedActivityforTotal:'activity',
-      selectedActivityTextforTotal:'Activity',
+      selectedActivityTextforTotal:'Interaction',
       filterValues: [
           {value:0,name:"1D"},
           {value:1,name:"5D"},

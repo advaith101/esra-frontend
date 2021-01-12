@@ -220,9 +220,9 @@ insightType = focusEntity.type;
                 var barData = this.chartData["insight" + docInsightCount][
                       "bar" + seriesCount];
                 if (seriesCount === 0) {
-                data.push({name:'ScaledTime',data:[parseFloat(barData.scaledTime).toFixed(2)]}); 
-                      data.push({name:'ScaledActivity',data:[parseFloat(barData.scaledActivity).toFixed(2)]});
-                      data.push({name:'ScaledSize',data:[parseFloat(barData.scaledSize).toFixed(2)]});
+                data.push({name:'Time',data:[parseFloat(barData.scaledTime).toFixed(2)]}); 
+                      data.push({name:'Interaction',data:[parseFloat(barData.scaledActivity).toFixed(2)]});
+                      data.push({name:'Contribution',data:[parseFloat(barData.scaledSize).toFixed(2)]});
                 } else {
 data[0].data = [...data[0].data,parseFloat(barData.scaledTime).toFixed(2)];
                       data[1].data = [...data[1].data,parseFloat(barData.scaledActivity).toFixed(2)];
