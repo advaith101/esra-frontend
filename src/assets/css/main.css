@@ -1,0 +1,25 @@
+.md-app-content {
+    padding: 0px!important;          
+    overflow: hidden;    
+    border-left-color: transparent!important;
+    background-color:#FAFAFA!important;
+    
+}
+.md-app .md-content.md-theme-default .md-app-drawer{
+    border-left-color: none!important;
+    border-right-color: none!important;      
+}
+.appSelect {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;    
+   width:100%;
+   background-color: transparent!important;
+  }
+  .v-btn::before, .v-chip::before {
+    background-color: transparent!important;
+  }
+  .theme--light.v-text-field--filled:not(.v-input--is-focused):not(.v-input--has-state) > .v-input__control > .v-input__slot:hover {
+    background: transparent!important;
+    cursor:pointer;    
+}

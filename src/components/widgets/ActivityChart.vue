@@ -1,0 +1,269 @@
+<template>
+  <div>
+    <v-chip-group >
+      <v-chip
+        label
+        outlined
+        v-bind:key="index"
+        :ref="'chip_'+user.type + user.id"
+        v-for="(user, index) in selectedEntities"
+        @click="
+          user.isSelected = !user.isSelected;
+          updateBorder(user,true);
+        "
+      >
+        {{ user.name }}
+        <v-icon v-if="user.isSelected" x-small right>mdi-eye</v-icon>
+        <v-icon v-else x-small right>mdi-eye-off</v-icon>
+      </v-chip>
+    </v-chip-group>
+  <div v-if="activityChartSeries.length > 0">
+    <apexchart
+    ref="activitychart"
+      type="line"
+      height="295"
+      :options="activityOptions"
+      :series="activityChartSeries"
+    ></apexchart>
+  </div>
+   <div v-else>
+    <apexchart
+    
+      type="line"
+      height="295"
+      :series="series"
+      :options="activityOptions"
+      
+    ></apexchart>
+  </div>
+  </div>
+</template>
+
+<script>
+import moment from "moment";
+export default {
+   
+  data() {
+    return {
+     //reqPayload: {},
+     chartData:[],
+    // selectedEntities:[],
+    series:[],
+      activityChartSeries: [],
+      activityOptions: {
+        chart: {
+          height: 295,
+          type: "line",
+          toolbar:{
+            tools:{
+              download:false,
+              selection:false,
+              pan: false,
+              reset:false 
+            }
+          }
+          
+        },
+      
+        stroke: {
+          width: 7,
+          curve: "smooth",
+        },
+
+        colors: [],
+        grid: {
+          show: false,
+        },
+        markers: {
+          size: 0,
+          colors: ["#FFA41B"],
+          strokeColors: "#fff",
+          strokeWidth: 2,
+          hover: {
+            size: 3,
+          },
+        },
+        noData: {
+          text: "Loading...",
+        },
+        yaxis: {
+          labels: {
+            style: {
+              color: "#828288",
+              fontSize: "10px",
+              fontFamily: "Open Sans",
+            },
+          },
+          title: {
+            text: "Score",
+          },
+        },
+        xaxis: {
+         //  categories: ['1','2','3','4','5','6','7','8','9','10'],
+                tickAmount: 10,
+          labels: {
+            show:false,
+            rotate:0,
+            style: {
+              color: "#828288",
+              fontSize: "10px",
+              fontFamily: "Open Sans",
+            },
+          },
+        },
+        legend: {
+          show: false,
+        },
+      },
+    };
+  },
+
+  props: ['selectedEntities', 'dateRange','timeMode','selectedApps','mode'],
+  // computed: {
+  //   selectedEntities: function() {
+  //     return this.$store.state.selectedEntities.map(x => Object.assign({},x));
+  //    //return this.$store.state.selectedEntities;
+  //   },
+  // },
+  mounted() {
+     
+    this.$watch(vm => [vm.dateRange,vm.timeMode,vm.selectedApps,vm.mode],async val => {
+     await this.getActivityChartData();      
+    }, {
+     // immediate: true, // run immediately
+      deep: true // detects changes inside objects. not needed here, but maybe in other cases
+    });
+    // the second watch is specific to users and team since we dont need deep for them so that toggle
+    // will work without reloading chart from api
+    this.$watch(vm => [vm.selectedEntities] , val => {
+      this.getActivityChartData(); 
+     setTimeout(() => {
+        this.selectedEntities.forEach(element => {
+       this.updateBorder(element);
+     });
+     }, 100);
+    }, {
+      //immediate: true, // run immediately
+      deep: false // detects changes inside objects. not needed here, but maybe in other cases
+    });
+  },
+
+  methods: {
+    getRequestPayload() {
+      var teamIDs = this.selectedEntities.filter(x => x.type === "team" && x.isSelected).map(y => y.id);
+      var userIDs = this.selectedEntities.filter(x => x.type === "user" && x.isSelected).map(y => y.id);
+      var mode = this.mode;
+      let reqPayload = {
+        mode:this.mode.toLowerCase(),
+        timeMode: this.timeMode,
+        teamIDs: teamIDs,
+        userIDs: userIDs,
+        enddate: moment(this.dateRange.endDate).format('YYYY-MM-DD HH:mm:ss'),
+        startdate: moment(this.dateRange.startDate).format('YYYY-MM-DD HH:mm:ss')        
+      }
+      if (this.selectedApps.length) {
+        reqPayload = {...reqPayload, applicationIDs:this.selectedApps};
+      }
+      return reqPayload;
+    },
+    updateBorder(user, refreshChart ) {      
+      var control = this.$refs["chip_" +user.type+ user.id][0].$el;
+      if (user.isSelected) {
+        control.style.borderColor = user.color;
+        control.style.setProperty("color", user.color, "important");
+        
+      } else {
+        control.style.borderColor = "grey";
+        control.style.setProperty("color", "black", "important");
+      }      
+      if (refreshChart ) {           
+      var res =  this.$refs.activitychart.toggleSeries(this.selectedEntities.filter(x => x.id === user.id && x.type === user.type)[0].name);
+      
+      }
+    },
+    async getActivityChartData() {
+      var payload = this.getRequestPayload();
+      this.activityChartSeries = [];
+     if (!payload.userIDs.length && !payload.teamIDs.length) {
+      //this.insightNumber = 0;
+      return;
+    }
+      try {
+        var res = await this.$apiService.post("/users/activityAggregated", payload);
+        if (res) {
+         // var response = res.data.result;  
+          this.chartData =  res.data.result;      
+          let categories = [];
+          var colors = [];
+          var description=[];
+          this.activityChartSeries = [];
+         
+         this.chartData.forEach((data) => {
+            var entity = this.selectedEntities.filter(x => x.id === data.id && x.type === data.type)[0];
+            colors = [... colors,entity.color];
+             this.activityChartSeries.push({       
+             
+              name: entity.name,                
+            data:data.values.map(x =>parseInt(x.value))
+            });
+            description.push(data.values.map(x =>x.app));
+            // categories.push(
+            //   ...data.values.map((x) =>
+            //     moment
+            //       (x.endtime, "YYYY-MM-DDTHH:mm:ss")
+            //       .format("HH:mm")
+            //   )
+            // );
+          });
+      //  categories = (categories.sort((a, b) => String(a).substring(0,2) - String(b).substring(0,2)))
+          this.activityOptions = {
+            ...this.activityOptions,
+            ...{
+              xaxis: {
+                ...this.activityOptions.xaxis,
+              //  type: "datetime",
+                // categories: [1,2,3,4,5,6,7,8,9,10],
+                // tickAmount: 10,
+              },
+              tooltip: { y: { formatter: (val,opt) => { 
+                
+      //          const desc =
+      // description[opt.seriesIndex][
+      //   opt.dataPointIndex
+      // ]
+      try {
+        var values = this.chartData[opt.seriesIndex].values[opt.dataPointIndex];
+    const value = values.value;
+    return values.app + ': ' + value
+      } catch (error) {
+       // console.log(opt.seriesIndex,opt.dataPointIndex);
+      }
+return '';
+
+     }},
+    x: { formatter: (val,opt) => { 
+                
+               try {
+                 return  moment(this.chartData[opt.seriesIndex].values[opt.dataPointIndex].endtime, "YYYY-MM-DDTHH:mm:ss")
+                  .format("MM-DD-YYYY hh:mm A");
+               } catch (error) {
+                 
+               }
+   
+
+  //  const value = opt.series[opt.seriesIndex][opt.dataPointIndex]
+
+    return  "" } }},
+              colors: colors
+            },
+          };
+         
+        }
+      } catch (error) {
+       // alert(error)
+        console.log(error);
+      }
+    },
+  },
+};
+</script>
