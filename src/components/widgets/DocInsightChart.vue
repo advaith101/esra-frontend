@@ -263,10 +263,22 @@ highestPlotValue.push(parseFloat(barData[keysSorted[0]]).toFixed(2));
                      
                     },
                     tooltip:{
-                       y: { formatter: (val,opt) => { 
-                            if (parseFloat(highestPlotValue[opt.dataPointIndex]) === val) {
-                              var self = this;
-                              return  val + ' ' + 'Time: ' +self.chartData["insight0"]["bar" + opt.dataPointIndex].rawTime;
+                       y: { 
+                         formatter: (val,opt) => { 
+                            //console.log(opt)
+                            // if (parseFloat(highestPlotValue[opt.dataPointIndex]) === val) {
+                            //   var self = this;
+                            //   return  val + ' ' + 'Time: ' +self.chartData["insight0"]["bar" + opt.dataPointIndex].rawTime;
+                            // }
+                            var self = this;
+                            if(opt.seriesIndex==0){
+                              return self.chartData["insight0"]["bar" + opt.dataPointIndex].rawTime;
+                            }
+                            else if(opt.seriesIndex==1){
+                              return val;
+                            }
+                            else if(opt.seriesIndex==2){
+                              return self.chartData["insight0"]["bar" + opt.dataPointIndex].scaledActivity+ 'Mb/hr';
                             }
                             return val;
                             }
