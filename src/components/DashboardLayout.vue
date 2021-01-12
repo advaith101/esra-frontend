@@ -93,7 +93,7 @@
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
                   <hr />
-                  <VueSlickCarousel :arrows="true" :dots="true" style="margin-bottom:10px">
+                  <VueSlickCarousel :arrows="true" :dots="true" style="margin-bottom:5px">
                     <div>
                       <ActivityChart :selectedEntities="selectedEntitiesforActivity" :timeMode="timeMode" :dateRange="dateRange" :selectedApps="selectedApps" :mode="selectedActivityforTotal"/>
                     </div>
@@ -230,7 +230,7 @@
                     class="panelborder"
                     
                   >
-                    <v-expansion-panel style="height:250px">
+                    <v-expansion-panel style="height:260px">
                       <v-expansion-panel-header
                         class="paneltitle"
                         expand-icon=""
@@ -308,7 +308,7 @@
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
                   <hr />
-                  <VueSlickCarousel :arrows="true" :dots="true" style="margin-bottom:10px">
+                  <VueSlickCarousel :arrows="true" :dots="true" style="margin-bottom:10px;">
                     <div>
                       <RadarChart :selectedEntities="selectedEntitiesforRadar" :selectedApps="selectedApps" :mode="selectedActivityforRadar" :dateRange="dateRange" :timeMode="timeMode" />
                     </div>

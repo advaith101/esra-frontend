@@ -1,5 +1,5 @@
 <template>
-  <div style="height:300px">
+  <v-card flat tile>
     <!-- <v-carousel cycle hide-delimiter-background :show-arrows=false vertical vertical-delimiters="true">
         <v-carousel-item
           v-for="(i) in 2"
@@ -8,7 +8,7 @@
           reverse-transition="fade-transition"
           transition="fade-transition"
         > -->
-    <VueSlickCarousel :arrows="true" ref="carousel" :dots="true" style="margin-bottom:10px" @afterChange="reloadTitle" v-if="comparisonBarNumber > 0">
+    <VueSlickCarousel :arrows="true" ref="carousel" :dots="true" @afterChange="reloadTitle" v-if="comparisonBarNumber > 0">
       <div v-for="i in comparisonBarNumber" :key="i">
         <apexchart
           type="bar"
@@ -27,7 +27,7 @@
     ></apexchart>
     <!-- </v-carousel-item>
       </v-carousel> -->
-  </div>
+  </v-card>
 </template>
 
 <script>

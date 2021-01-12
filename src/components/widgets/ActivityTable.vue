@@ -70,7 +70,7 @@ export default {
                 startdate:this.dateRange.startDate,
                 //applicationIDs:this.selectedApps
             }
-            console.log(teamIDs,userIDs)
+            //console.log(teamIDs,userIDs)
             // var post_data = {
             //     teamIDs: [20,21],
             //     userIDs: [1,2,3],
