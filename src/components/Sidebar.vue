@@ -42,7 +42,7 @@
           :items="teams"
           item-value="TeamID"
           item-text="Name"
-          label="Choose Team"
+          label="Search Teams"
           @change="checkMaximumAllowed()"
         >
            <template v-slot:selection="{ index }">             
