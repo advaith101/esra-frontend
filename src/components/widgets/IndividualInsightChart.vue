@@ -258,7 +258,11 @@ props: ['selectedEntities','dateRange','timeMode','selectedApps','graphMode'],
                   colors.push(this.selectedEntities.filter(x => x.id === team && x.type === "team")[0].color);
                 }
                 if (colors.length < 2) {
-                  colors.push('#E1E1E1');
+                  //colors.push('#E1E1E1');
+                  var color=colors[0];
+                  colors[0]='#E1E1E1'
+                  colors.push(color)
+                  //console.log('after:',colors)
                 }
               //  this.insightOptions.push([]);
                 this.insightOptions.push( {

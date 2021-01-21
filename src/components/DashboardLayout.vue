@@ -101,6 +101,11 @@
                       <ActivityTable :selectedEntities="selectedEntitiesforActivity" :dateRange="dateRange" :selectedApps="selectedApps" :timeMode="timeMode" :mode="selectedActivityforTotal"/>
                     </div>
                   </VueSlickCarousel>
+                  <!-- <v-skeleton-loader
+      class="mx-auto"
+      :boilerplate="false"
+      type="card"
+    ></v-skeleton-loader> -->
                 </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>
