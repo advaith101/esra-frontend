@@ -1,13 +1,10 @@
-<template>  
-  <v-card
-    style="margin-top:5px;border-right:none"
-           
-  >
+<template>
+  <v-card style="margin-top: 5px; border-right: none">
     <div>
-      <v-col cols="12" >
-        <v-row style="margin-top:-5px">
+      <v-col cols="12">
+        <v-row style="margin-top: -5px">
           <v-flex lg4>
-            <span  class="emptitle">Employees</span>
+            <span class="emptitle">Employees</span>
           </v-flex>
           <v-flex lg6 class="d-flex">
             <v-select
@@ -19,61 +16,58 @@
               solo
               placeholder="Choose Mode"
               class="employeedd elevation-0"
-              
             ></v-select>
           </v-flex>
         </v-row>
       </v-col>
-      <v-card
-        class="d-flex align-self-center newteam"     
-        text
-        tile
-        dense        
-      >
+      <v-card class="d-flex align-self-center newteam" text tile dense>
         <v-autocomplete
-          dense          
+          dense
           solo
           flat
           multiple
           return-object
           class="elevation-0"
           height="30px"
-          v-model="selectedTeams"         
-          :items="teams"
-          item-value="TeamID"
+          v-model="selectedItems"
+          :items="entities"
+          item-value="Name"
           item-text="Name"
           label="Search for .."
           @change="checkMaximumAllowed()"
         >
-           <template v-slot:selection="{ index }">             
-    <span v-if="index < 1" class="appSelect">{{ selectedTeamNames }}</span>   
-  </template>
+          <template v-slot:selection="{ index }">
+            <span v-if="index < 1" class="appSelect">{{
+              selectedTeamNames
+            }}</span>
+          </template>
         </v-autocomplete>
       </v-card>
       <v-card
         class="d-flex align-self-center newteam"
-        style="margin-top:15px"
+        style="margin-top: 15px"
         text
         tile
       >
-        <v-dialog
-          v-model="dialog"
-          persistent
-          max-width="500"
-        >
+        <v-dialog v-model="dialog" persistent max-width="500">
           <template v-slot:activator="{ on, attrs }">
             <v-btn
-                color="#144584"
-                class="white--text"
-                width="218px"
-                height="40px"
-                style="font-size:12px"
-                v-bind="attrs"
-                v-on="on"
-                :retain-focus-on-click="true"                
-              >
-                Create new team
-                <v-img height="40" width="20" :src="require('@/assets/icons/+-1.png')" class="img-buttons mt-2 ml-30" />
+              color="#144584"
+              class="white--text"
+              width="218px"
+              height="40px"
+              style="font-size: 12px"
+              v-bind="attrs"
+              v-on="on"
+              :retain-focus-on-click="true"
+            >
+              Create new team
+              <v-img
+                height="40"
+                width="20"
+                :src="require('@/assets/icons/+-1.png')"
+                class="img-buttons mt-2 ml-30"
+              />
             </v-btn>
           </template>
           <v-card>
@@ -84,13 +78,20 @@
             </v-tabs>
             <v-tabs-items v-model="choice" ref="chosentab">
               <v-tab-item :key="1">
-                <v-card class="pa-2">
+                <v-card flat class="pa-2">
                   <v-card-text>
                     <v-text-field
                       label="Name"
                       dense
                       v-model="newTeamName"
                     ></v-text-field>
+                    <v-autocomplete
+                      multiple
+                      return-object
+                      v-model="selectedUsersAddtoTeam"
+                      :items="allUsers"
+                      item-text="Name"
+                      placeholder="Select Users.."></v-autocomplete>
                   </v-card-text>
                   <!-- <v-card-actions>
                     <v-spacer></v-spacer>
@@ -107,9 +108,17 @@
                   item-text="Name"
                   v-model="toaddteam"
                   outlined
-                  placeholder="Select Team">
+                  placeholder="Select Team"
+                >
                 </v-select>
-                <v-autocomplete :items="allUsers" item-text="Name" placeholder="Select users"></v-autocomplete>
+                <v-autocomplete
+                  multiple
+                  return-object
+                  v-model="selectedUsersAddtoTeam"
+                  :items="allUsers"
+                  item-text="Name"
+                  placeholder="Select users"
+                ></v-autocomplete>
                 <!-- <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn text @click="dialog=false">Cancel</v-btn>
@@ -118,254 +127,308 @@
               </v-tab-item>
             </v-tabs-items>
             <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn text @click="dialog=false">Cancel</v-btn>
-                  <v-btn text @click="createTeam" color="indigo">Save</v-btn>
-                </v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn text @click="dialog = false">Cancel</v-btn>
+              <v-btn text @click="createTeam(choice)" color="indigo">Save</v-btn>
+            </v-card-actions>
           </v-card>
-        </v-dialog> 
+        </v-dialog>
       </v-card>
-     <div class="selectiondiv" :style="{minHeight:windowHeight+'px'}">
-      <div class="ma-2" >
-      <v-expansion-panels >
-        <v-expansion-panel v-for="(team) in selectedTeams" :style="{border:'1px solid '+ team.color , borderRadius:4+'px'}" v-bind:key="team.TeamID" class="panelborder" >
-          <v-expansion-panel-header  >
-          <template v-slot:actions >
-            <v-icon class="icon" @click="toggleTeam(team.TeamID)" :color="team.color" :ref="'team_'+team.TeamID" >mdi-plus-circle</v-icon>
-          </template>
-          <span class="header" @click.stop="removeTeam(team.TeamID)" :style="{color: team.color}">{{ team.Name }}</span>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content >
-            <TeamItem :allUsers="allUsers" :team="team" />
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
-      </div>
-      <h5 v-if="!filteredUsers.length">No matches</h5>
-      <v-list
+      <div class="selectiondiv" :style="{ minHeight: windowHeight + 'px' }">
+        <div class="ma-2">
+          <v-expansion-panels>
+            <v-expansion-panel
+              v-for="team in selectedTeams"
+              :style="{
+                border: '1px solid ' + team.color,
+                borderRadius: 4 + 'px',
+              }"
+              v-bind:key="team.TeamID"
+              class="panelborder"
+            >
+              <v-expansion-panel-header>
+                <template v-slot:actions>
+                  <v-icon
+                    class="icon"
+                    @click="toggleTeam(team.TeamID)"
+                    :color="team.color"
+                    :ref="'team_' + team.TeamID"
+                    >mdi-plus-circle</v-icon
+                  >
+                </template>
+                <span
+                  class="header"
+                  @click.stop="removeTeam(team.TeamID)"
+                  :style="{ color: team.color }"
+                  >{{ team.Name }}
+                </span>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <TeamItem :allUsers="allUsers" :team="team" />
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </div>
+        <h5 v-if="!filteredUsers.length">No matches</h5>
+        <v-list
           dense
-          nav                
+          nav
           class="sidebar overflow-y-auto"
           v-if="filteredUsers.length"
-      >
-        <v-list-item
-          v-for="(user) in filteredUsers"
-          :key="user.title"
-          link
-          @click="crudUser(user)"
-          :style="{border:'1px solid '+ user.color , borderRadius:4+'px'}"
-          ref="userlist"        
         >
-         <UserItem :user="user" />
-        </v-list-item>
-      </v-list>
+          <v-list-item
+            v-for="user in filteredUsers"
+            :key="user.title"
+            link
+            @click="crudUser(user)"
+            :style="{
+              border: '1px solid ' + user.color,
+              borderRadius: 4 + 'px',
+            }"
+            ref="userlist"
+          >
+            <UserItem :user="user" />
+          </v-list-item>
+        </v-list>
       </div>
     </div>
   </v-card>
 </template>
   
 <script>
-import TeamItem from './widgets/TeamItem';
-import UserItem from './widgets/UserItem';
+import TeamItem from "./widgets/TeamItem";
+import UserItem from "./widgets/UserItem";
 import moment from "moment";
-export default {  
-  async created(){
+export default {
+  async created() {
     try {
-      
-    this.$store.commit('SET_IS_LOADING', true);
-     await this.getUsers();
-      await this.getTeams();   
-   this.allUsers = this.selectedUsers.concat(this.users);
-   var entitiesInStore = false;
-    if (this.$store.state.selectedEntities.length) {
-entitiesInStore = true;
-    }
-    
-    if (localStorage.getItem('selectedEntities') !== null && localStorage.getItem('selectedEntities') !== undefined) {
-   // this.$store.commit("resetState");
-   // this.$store.state.selectedEntities = Object.assign([],[]);
-     var selectedEntities = JSON.parse(localStorage.getItem('selectedEntities'));
-     if (!entitiesInStore) {
-     localStorage.removeItem('selectedEntities');
-     }
-     selectedEntities.forEach((entity) => {
-       if (entity.type === "user") {
-        // this.selectedUsers.push(entity); 
-        var user = this.allUsers.filter(x => x.UserID === entity.id)[0];        
-          this.crudUser(user,entitiesInStore);
-        //  this.selectedUsers.push(entity); 
-       } else {
-         var team = this.teams.filter(x => x.TeamID === entity.id)[0]; 
-          this.allowTeamAddition = false;
-         this.selectedTeams.push(team);
-         this.bufferTeams.push(team);
-          this.pushAssignedColor();
-          team.color = this.assignedColors[this.assignedColors.length -1]; 
-          if (!entitiesInStore) {
-this.changeStore(team, "team");  
-          }    
-
-       }
-     });
-     
-    
-    }
-    this.addSelectedTeamNames();
-     }catch(error) { }
-    this.$store.commit('SET_IS_LOADING', false);
-   // this.assignedColors.push([]);
+      this.$store.commit("SET_IS_LOADING", true);
+      await this.getUsersandTeams();
+      await this.getUsers();
+      await this.getTeams();
+      this.allUsers = this.selectedUsers.concat(this.users);
+      var entitiesInStore = false;
+      if (this.$store.state.selectedEntities.length) {
+        entitiesInStore = true;
+      }
+      if(
+        localStorage.getItem("selectedItems") !== null &&
+        localStorage.getItem("selectedItems") !== undefined
+      ){
+        this.selectedItems= JSON.parse(localStorage.getItem("selectedItems"))
+      }
+      if (
+        localStorage.getItem("selectedEntities") !== null &&
+        localStorage.getItem("selectedEntities") !== undefined
+      ) {
+        // this.$store.commit("resetState");
+        // this.$store.state.selectedEntities = Object.assign([],[]);
+        var selectedEntities = JSON.parse(
+          localStorage.getItem("selectedEntities")
+        );
+        if (!entitiesInStore) {
+          localStorage.removeItem("selectedEntities");
+        }
+        selectedEntities.forEach((entity) => {
+          if (entity.type === "user") {
+            // this.selectedUsers.push(entity);
+            var user = this.allUsers.filter((x) => x.UserID === entity.id)[0];
+            this.crudUser(user, entitiesInStore);
+            var index
+            this.selectedUsersforManager.forEach((x,i)=>{
+              if(x.UserID===entity.UserID){
+                index = i
+              }
+            })
+            this.selectedUsersforManager.splice(index,1)
+            //  this.selectedUsers.push(entity);
+          // } else {
+          //   var team = this.teams.filter((x) => x.TeamID === entity.id)[0];
+          //   this.allowTeamAddition = false;
+          //   this.selectedTeams.push(team);
+          //   this.bufferTeams.push(team);
+          //   this.pushAssignedColor();
+          //   team.color = this.assignedColors[this.assignedColors.length - 1];
+          //   if (!entitiesInStore) {
+          //     this.changeStore(team, "team");
+          //   }
+          }
+        });
+      }
+      this.addSelectedTeamNames();
+    } catch (error) {}
+    this.$store.commit("SET_IS_LOADING", false);
+    // this.assignedColors.push([]);
   },
-  
-  components:{
+
+  components: {
     TeamItem,
     UserItem,
   },
-  props:['timeMode','dateRange','searchString'],
-  data () {
-      return {        
-        users: [],
-        mode:[
-          {id:'activetime',title:"Active"},
-          {id:'idletime',title:"Idle"},
-          {id:'output',title:"Contribution"},
-          {id:'activity',title:"Interaction"},
-          {id:'tempo',title:"Tempo"},
-        ],
-        teams:[],
-        dialog:false,
-        selectedMode:'activity',
-        selectedUsers:[],
-        allUsers:[],
-        choice:2,
-        newTeamName: "",
-        toaddteam:null,
-        selectedTeams:[],
-        bufferTeam: null,
-        bufferTeams: [],
-        expToggleIndex:"",
-        exptogg:false,
-        colors:['#473198','#ffb84e','#D782BA','#4cb3d2','#3bb08d'],
-        assignedColors:[],
-        allowTeamAddition: true,
-        selectedTeamNames:'',
-        windowHeight: document.documentElement.scrollHeight,
-      }
-    },
-  computed:{
-    filteredUsers:function() {
-      return this.allUsers.filter((user) => {
-        return user.Name.toUpperCase().match(this.searchString.toUpperCase());
-      })
-    },    
-  },
-  watch:{
-   
-    filteredUsers:function() {
-      this.filteredUsers.forEach((element,i) => {
-            if(!this.selectedUsers.includes(element)){
-             // this.$refs.userlist[i].$el.style.border = '2px solid '+ this.$store.state.selectedEntities.filter(x => x.type === "user" && x.id === element.UserID)[0].color;
-             element.color ='white';
-            }
-            // else{
-            //   // this.$refs.userlist[i].$el.style.backgroundColor = 'white';
-            //   this.$refs.userlist[i].$el.style.border = '2px solid white';
-            // }
-        });
-    },
-    selectedMode:function(){
-        this.$emit('mode-change',this.selectedMode);
-        this.getUsers();
-    },
-    
-    selectedTeams: function(value)  {
-    
-    if (!this.allowTeamAddition) {
-      this.allowTeamAddition = true;
-      return;
-    }
-    
-      if (value === null || !value.length) {
-         for(var i = 0; i < this.bufferTeams.length; i++) {
-          //  if(this.bufferTeams[i].TeamID != value[i].TeamID) {
-            this.popAssignedColor(this.bufferTeams[i]);
-            this.bufferTeams[i].color ='';           
-              this.changeStore(this.bufferTeams[i], "team")
-            //  this.bufferTeams.splice(i, 1)
-           // }
-          }
-          this.bufferTeams = [];
-         // return;
-      } else if(this.bufferTeams.length > value.length) { 
-    for(var i = 0; i < this.bufferTeams.length; i++) {
-      var existingIndex = value.findIndex(x => x.TeamID === this.bufferTeams[i].TeamID);
-       if (existingIndex < 0) {      
-          this.popAssignedColor(this.bufferTeams[i]);
-          this.bufferTeams[i].color ='';
-         this.changeStore(this.bufferTeams[i], "team");
-this.bufferTeams.splice(i,1);
-         break;
-       }
+  props: ["timeMode", "dateRange", "searchString"],
+  data() {
+    return {
+      users: [],
+      selectedItems: [],
+      mode: [
+        { id: "activetime", title: "Active" },
+        { id: "idletime", title: "Idle" },
+        { id: "output", title: "Contribution" },
+        { id: "activity", title: "Interaction" },
+        { id: "tempo", title: "Tempo" },
+        { id: "composite", title: "Composite" },
+      ],
+      teams: [],
+      selectedUsersAddtoTeam:[],
+      dialog: false,
+      selectedMode: "activity",
+      selectedUsers: [],
+      allUsers: [],
+      entities: null,
+      choice: 2,
+      newTeamName: "",
+      toaddteam: null,
+      bufferTeam: null,
+      bufferTeams: [],
+      expToggleIndex: "",
+      exptogg: false,
+      colors: ["#473198", "#ffb84e", "#D782BA", "#4cb3d2", "#3bb08d"],
+      assignedColors: [],
+      allowTeamAddition: true,
+      selectedTeamNames: "",
+      windowHeight: document.documentElement.scrollHeight,
     };
+  },
+  computed: {
+    selectedTeams:function(){
+      return this.selectedItems.filter((user)=>{return user.type=='team'})
+    },
+    selectedUsersforManager:function(){
+      return this.selectedItems.filter((user)=>{return user.type=='user'})
+    },
+    filteredUsers: function () {
+      return this.selectedUsers.concat(this.selectedUsersforManager); /*.filter((item) => /*{
+        return user.Name.toUpperCase().match(this.searchString.toUpperCase());
+      }*/
+    },
+  },
+  watch: {
+    selectedTeams:function(){
+      console.log(this.selectedTeams)
+    },
+    selectedItems:function(){
+      localStorage.setItem("selectedItems",JSON.stringify(this.selectedItems));
+    },
+    filteredUsers: function () {
+      this.filteredUsers.forEach((element, i) => {
+        if (!this.selectedUsers.includes(element)) {
+          // this.$refs.userlist[i].$el.style.border = '2px solid '+ this.$store.state.selectedEntities.filter(x => x.type === "user" && x.id === element.UserID)[0].color;
+          element.color = "white";
+        }
+        // else{
+        //   // this.$refs.userlist[i].$el.style.backgroundColor = 'white';
+        //   this.$refs.userlist[i].$el.style.border = '2px solid white';
+        // }
+      });
+    },
+    selectedMode: function () {
+      this.$emit("mode-change", this.selectedMode);
+      this.getUsers();
+    },
+
+    selectedTeams: function (value) {
+      if (!this.allowTeamAddition) {
+        this.allowTeamAddition = true;
+        return;
+      }
+
+      if (value === null || !value.length) {
+        for (var i = 0; i < this.bufferTeams.length; i++) {
+          //  if(this.bufferTeams[i].TeamID != value[i].TeamID) {
+          this.popAssignedColor(this.bufferTeams[i]);
+          this.bufferTeams[i].color = "";
+          this.changeStore(this.bufferTeams[i], "team");
+          //  this.bufferTeams.splice(i, 1)
+          // }
+        }
+        this.bufferTeams = [];
+        // return;
+      } else if (this.bufferTeams.length > value.length) {
+        for (var i = 0; i < this.bufferTeams.length; i++) {
+          var existingIndex = value.findIndex(
+            (x) => x.TeamID === this.bufferTeams[i].TeamID
+          );
+          if (existingIndex < 0) {
+            this.popAssignedColor(this.bufferTeams[i]);
+            this.bufferTeams[i].color = "";
+            this.changeStore(this.bufferTeams[i], "team");
+            this.bufferTeams.splice(i, 1);
+            break;
+          }
+        }
       } else {
-        var existingIndex = this.bufferTeams.findIndex(x => x.TeamID === value[value.length -1].TeamID);
+        var existingIndex = this.bufferTeams.findIndex(
+          (x) => x.TeamID === value[value.length - 1].TeamID
+        );
         if (existingIndex < 0) {
-          this.bufferTeams.push(value[value.length -1]);
+          this.bufferTeams.push(value[value.length - 1]);
           this.pushAssignedColor();
-          value[value.length -1].color = this.assignedColors[this.assignedColors.length -1]; 
+          value[value.length - 1].color = this.assignedColors[
+            this.assignedColors.length - 1
+          ];
           // var self = this.$refs;
           // setTimeout(() => {
           //    self.teamPanel[0].$el.style.border = '2px solid '+ value[value.length -1].color;
-          // }, 100);        
-        } else {        
-        this.popAssignedColor(this.bufferTeams[existingIndex]);
-        this.bufferTeams[existingIndex].colors='';
-          this.bufferTeams.splice(existingIndex,1);
-          
-        }
-        this.changeStore(value[value.length -1], "team");
-      }   
-     
-    }
-  },
-  mounted(){
-    this.windowHeight = document.body.scrollHeight;
-    this.$watch(vm => [vm.timeMode,vm.dateRange] , val => {      
-      this.getUsers();
-    });
-  },
-    methods: {
-    
-      checkMaximumAllowed() {
-         if ((this.selectedTeams.length + this.selectedUsers.length) > 5) {
-          this.selectedTeams.splice(this.selectedTeams.length-1,1);
-          this.allowTeamAddition = false; 
-          return;       
+          // }, 100);
         } else {
-          this.addSelectedTeamNames();
-        }     
-        
-      },
-      addSelectedTeamNames(){
-        this.selectedTeamNames = '';
-        this.selectedTeams.forEach((element,index) => {
-          this.selectedTeamNames += index > 0 ? ',' + element.Name : element.Name;
-        });
-      },
-      popAssignedColor(entity){
-         this.colors.push(entity.color);
-         var colorIndex = this.assignedColors.findIndex(x => x === entity.color);              
-         this.assignedColors.splice(colorIndex,1);
-      },
-      pushAssignedColor(){
-        this.assignedColors.push(this.colors[0]);
-        this.colors.splice(0,1);
-      },
-      removeTeam(teamID){
-        var index = this.selectedTeams.findIndex(x => x.TeamID === teamID);
-        this.selectedTeams.splice(index,1);
-      },
-       toggleTeam(toggindex){
-        this.selectedTeams.forEach((team/*, index*/) => {
+          this.popAssignedColor(this.bufferTeams[existingIndex]);
+          this.bufferTeams[existingIndex].colors = "";
+          this.bufferTeams.splice(existingIndex, 1);
+        }
+        this.changeStore(value[value.length - 1], "team");
+      }
+    },
+  },
+  mounted() {
+    this.windowHeight = document.body.scrollHeight;
+    this.$watch(
+      (vm) => [vm.timeMode, vm.dateRange],
+      (val) => {
+        this.getUsers();
+      }
+    );
+  },
+  methods: {
+    checkMaximumAllowed() {
+      if (this.selectedTeams.length + this.selectedUsers.length > 5) {
+        this.selectedTeams.splice(this.selectedTeams.length - 1, 1);
+        this.allowTeamAddition = false;
+        return;
+      } else {
+        this.addSelectedTeamNames();
+      }
+    },
+    addSelectedTeamNames() {
+      this.selectedTeamNames = "";
+      this.selectedItems.forEach((element, index) => {
+        this.selectedTeamNames += index > 0 ? "," + element.Name : element.Name;
+      });
+    },
+    popAssignedColor(entity) {
+      this.colors.push(entity.color);
+      var colorIndex = this.assignedColors.findIndex((x) => x === entity.color);
+      this.assignedColors.splice(colorIndex, 1);
+    },
+    pushAssignedColor() {
+      this.assignedColors.push(this.colors[0]);
+      this.colors.splice(0, 1);
+    },
+    removeTeam(teamID) {
+      var index = this.selectedTeams.findIndex((x) => x.TeamID === teamID);
+      this.selectedTeams.splice(index, 1);
+    },
+    toggleTeam(toggindex) {
+      this.selectedTeams.forEach((team /*, index*/) => {
         if (team.TeamID !== toggindex) {
           var control = this.$refs["team_" + team.TeamID][0].$el;
           control.classList.remove("mdi-minus-circle");
@@ -385,194 +448,230 @@ this.bufferTeams.splice(i,1);
         control.classList.remove("mdi-minus-circle");
         control.classList.add("mdi-plus-circle");
       }
-      },
-      async createTeam() {
-        var arr = []
-        this.selectedUsers.forEach((user) => {
-          arr.push(user.UserID)
-        });
-
-        var post_data = {};
-
-        if(this.newTeamName.length!=0){
-          post_data["teamname"]=this.newTeamName;
-          post_data["isNew"]=1;
-        }
-        else{
-          post_data["teamID"]=this.toaddteam;
-          post_data["isNew"]=0;
-        }
-
-        post_data["managerID"]=2;
-        post_data["userIDs"]=arr;
-        try{
-          var res = await this.$apiService.post('/common/addTeamWithUsers',post_data);
-          if(res.data.status=="ok"){
-            this.dialog = false;
-            this.selectedUsers = [];
-            this.getTeams();
-          }
-        }
-        catch(error) { console.log(error); }
-      },
-      remove (item) {
-        const index = this.selectedTeams.indexOf(item)
-        if (index >= 0) this.selectedTeams.splice(index, 1)
-        this.bufferTeam = item
-      },
-      reorderUser(user) {     
-        let usersList = this.users;
-        usersList.forEach(function(item,i){
-          if(item.email === user.email){
-            usersList.splice(i, 1);
-            usersList.unshift(item);
-          }
-        });
-        this.users = usersList;
-        this.$refs.userlist[0].$el.style.backgroundColor = "red"; //rgb(242, 246, 252)
-      },
-      
-      async getCompany(){
-        try{
-          var res = await this.$apiService.post('/common/GetCompanies');
-          if(res.status==200){
-            this.company = res.data.data;
-          }
-        }
-        catch(error){ console.log(error)}
-      },
-      async getUsers(){
-      //  var selected = Object.assign([],this.selectedUsers);        
-        //  for(let user of this.selectedUsers) {
-        //    this.crudUser(user);
-        //  }              
-        try{
-      var res = await this.$apiService.post('/users/getAllEmployeesWithScores',{
-        mode:this.selectedMode,
-        timeMode: this.timeMode,
-        enddate:this.dateRange && moment(this.dateRange.endDate).format('YYYY-MM-DD HH:mm:ss'),
-        startdate:this.dateRange && moment(this.dateRange.startDate).format('YYYY-MM-DD HH:mm:ss'),
+    },
+    async createTeam(choice) {
+      var arr = [];
+      this.selectedUsersAddtoTeam.forEach((user) => {
+        arr.push(user.UserID);
       });
-      if(res.data.status=='ok'){
-        this.users=res.data.result;
-       // this.selectedUsers = [];
-        
-       //this.allUsers = this.users;
-        //var selectedEntities = this.$store.state.selectedEntities;
-     //this.selectedUsers = [];
-    // debugger;
-    
-     if (this.selectedUsers.length) {
-     for(let user of this.selectedUsers) {     
-     // this.crudUser(user);
-     //this.selectedUsers.push(user);
-     var existingIndex = this.users.findIndex(x => x.UserID === user.UserID);
-     if (existingIndex > -1) {       
-       user.value = this.users[existingIndex].value;          
-     }
-     }
-     //this.filteredUsers = this.allUsers;
-     }
-     this.allUsers = this.selectedUsers.concat(this.users);
-     this.selected =[];
-    //  selectedEntities.forEach((entity) => {
-    //    if (entity.type === "user") {
-    //     // this.selectedUsers.push(entity); 
-    //     var user = this.allUsers.filter(x => x.UserID === entity.id)[0];        
-    //       this.crudUser(user,true);
-    //     //  this.selectedUsers.push(entity); 
-    //    }
-    //  })
+      var post_data = {};
+      if(choice==0) { 
+        console.log('create',arr)
+        if (this.newTeamName.length != 0) {
+          post_data["teamname"] = this.newTeamName;
+          post_data["isNew"] = 1;
+        }
+        else {
+          alert('Please enter a name for the new team!')
+        }
       }
-      
-      }catch(error) { console.log(error); }
-      },
+      else if(choice==1){ 
+        console.log('add new member(s)',arr)
+        post_data["teamID"] = this.toaddteam;
+        post_data["isNew"] = 0; 
+      }
+      post_data["managerID"] = localStorage.getItem('userid');
+      post_data["userIDs"] = arr;
+      try {
+        var res = await this.$apiService.post(
+          "/common/addTeamWithUsers",
+          post_data
+        );
+        if (res.data.status == "ok") {
+          this.dialog = false;
+          this.selectedUsers = [];
+          this.getTeams();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    remove(item) {
+      const index = this.selectedTeams.indexOf(item);
+      if (index >= 0) this.selectedTeams.splice(index, 1);
+      this.bufferTeam = item;
+    },
+    reorderUser(user) {
+      let usersList = this.users;
+      usersList.forEach(function (item, i) {
+        if (item.email === user.email) {
+          usersList.splice(i, 1);
+          usersList.unshift(item);
+        }
+      });
+      this.users = usersList;
+      this.$refs.userlist[0].$el.style.backgroundColor = "red"; //rgb(242, 246, 252)
+    },
 
-      async getTeams(){
-        try{
-          var res = await this.$apiService.post('/common/getAllTeamsWithMembers',{
-            managerID:2
-          });
-          if(res.status==200){
-            this.teams = res.data.data;
+    async getCompany() {
+      try {
+        var res = await this.$apiService.post("/common/GetCompanies");
+        if (res.status == 200) {
+          this.company = res.data.data;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async getUsers() {
+      //  var selected = Object.assign([],this.selectedUsers);
+      //  for(let user of this.selectedUsers) {
+      //    this.crudUser(user);
+      //  }
+      try {
+        var res = await this.$apiService.post(
+          "/users/getAllEmployeesWithScores",
+          {
+            mode: this.selectedMode,
+            timeMode: this.timeMode,
+            enddate:
+              this.dateRange &&
+              moment(this.dateRange.endDate).format("YYYY-MM-DD HH:mm:ss"),
+            startdate:
+              this.dateRange &&
+              moment(this.dateRange.startDate).format("YYYY-MM-DD HH:mm:ss"),
           }
-        }catch(error) { console.log(error); }
-      },
-      
-      isSelected(user){
-        console.log(this.selectedUser.includes(user));
-        return true;
+        );
+        if (res.data.status == "ok") {
+          this.users = res.data.result;
+          // this.selectedUsers = [];
 
-      },
+          //this.allUsers = this.users;
+          //var selectedEntities = this.$store.state.selectedEntities;
+          //this.selectedUsers = [];
+          // debugger;
 
-     crudUser(user,entitiesInStore){
+          if (this.selectedUsers.length) {
+            for (let user of this.selectedUsers) {
+              // this.crudUser(user);
+              //this.selectedUsers.push(user);
+              var existingIndex = this.users.findIndex(
+                (x) => x.UserID === user.UserID
+              );
+              if (existingIndex > -1) {
+                user.value = this.users[existingIndex].value;
+              }
+            }
+            //this.filteredUsers = this.allUsers;
+          }
+          this.allUsers = this.selectedUsers.concat(this.users);
+          this.selected = [];
+          //  selectedEntities.forEach((entity) => {
+          //    if (entity.type === "user") {
+          //     // this.selectedUsers.push(entity);
+          //     var user = this.allUsers.filter(x => x.UserID === entity.id)[0];
+          //       this.crudUser(user,true);
+          //     //  this.selectedUsers.push(entity);
+          //    }
+          //  })
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async getUsersandTeams() {
+      try {
+        var res = await this.$apiService.post("users/getAllEmployeesAndTeams", {
+          mode: this.selectedMode,
+          timeMode: this.timeMode,
+          managerID: localStorage.getItem('userid'),
+        });
+        if (res.status == 200) {
+          this.entities = res.data.result;
+          console.log(this.entities.length);
+        }
+      } catch (e) {}
+    },
+    async getTeams() {
+      try {
+        var res = await this.$apiService.post(
+          "/common/getAllTeamsWithMembers",
+          {
+            managerID: localStorage.getItem('userid'),
+          }
+        );
+        if (res.status == 200) {
+          this.teams = res.data.data;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    isSelected(user) {
+      console.log(this.selectedUser.includes(user));
+      return true;
+    },
+
+    crudUser(user, entitiesInStore) {
       //  alert((this.selectedTeams.length + this.selectedUsers.length));
       //  alert((this.$store.state.selectedEntities.length));
-        //  if (this.$store.state.selectedEntities >= 5) {
-        //    this.selectedUsers.splice(this.selectedUsers.length-1,1);
-        //    return;
-        //  }
-        if(this.selectedUsers.includes(user)){
-          var index = this.selectedUsers.indexOf(user);
-          this.selectedUsers.splice(index,1);
-          this.users.splice(user.UserID,0,user);
-          this.users.sort((a,b)=>{return a.UserID - b.UserID});
-          this.popAssignedColor(user);
-         user.color = 'white';         
-         this.allUsers = this.selectedUsers.concat(this.users);       
-        this.changeStore(user,"user");
-          
-        }  
-        else if (this.$store.state.selectedEntities.length < 5) {
-          this.selectedUsers.splice(0,0,user);
-          this.selectedUsers.forEach((element) => {
-            var index = this.users.indexOf(element);
-            if(index > -1) {
-              this.users.splice(index,1);
-            }
-          });
-           this.pushAssignedColor();
-           user.color = this.assignedColors[this.assignedColors.length -1];
-            this.allUsers = this.selectedUsers.concat(this.users);    
-            if (!entitiesInStore) {   
-       this.changeStore(user,"user");
-            }
+      //  if (this.$store.state.selectedEntities >= 5) {
+      //    this.selectedUsers.splice(this.selectedUsers.length-1,1);
+      //    return;
+      //  }
+      if (this.selectedUsers.includes(user)) {
+        var index = this.selectedUsers.indexOf(user);
+        this.selectedUsers.splice(index, 1);
+        this.users.splice(user.UserID, 0, user);
+        this.selectedUsersforManager.splice(user.UserID,0,user)
+        this.users.sort((a, b) => {
+          return a.UserID - b.UserID;
+        });
+        this.popAssignedColor(user);
+        user.color = "white";
+        this.allUsers = this.selectedUsers.concat(this.users);
+        this.changeStore(user, "user");
+      } else if (this.$store.state.selectedEntities.length < 5) {
+        this.selectedUsers.splice(0, 0, user);
+        this.selectedUsers.forEach((element) => {
+          var index = this.users.indexOf(element);
+          var index1 = this.selectedUsersforManager.indexOf(element);
+          if (index > -1) {
+            this.users.splice(index, 1);
+          }
+          if (index1 > -1) {
+            this.selectedUsersforManager.splice(index1, 1);
+          }
+        });
+        this.pushAssignedColor();
+        user.color = this.assignedColors[this.assignedColors.length - 1];
+        this.allUsers = this.selectedUsers.concat(this.users);
+        if (!entitiesInStore) {
+          this.changeStore(user, "user");
         }
-       
-       
-      },
-
-     changeStore(value,type){
-        var store={}
-        if(type=="user"){
-          store.id=value.UserID
-          store.type="user"
-        }
-        else{
-          store.id=value.TeamID
-          store.type="team"
-        }
-        store.name=value.Name
-        store.isSelected=true
-        var length = this.$store.state.selectedEntities.length;      
-       
-        store.color= value.color;        
-       this.$store.commit('changeSelected',store);
       }
-    }
-}
+    },
 
+    changeStore(value, type) {
+      var store = {};
+      if (type == "user") {
+        store.id = value.UserID;
+        store.type = "user";
+      } else {
+        store.id = value.TeamID;
+        store.type = "team";
+      }
+      store.name = value.Name;
+      store.isSelected = true;
+      var length = this.$store.state.selectedEntities.length;
+
+      store.color = value.color;
+      this.$store.commit("changeSelected", store);
+    },
+  },
+};
 </script>
 
 <style scoped>
 .icon {
-	order: 0;
-  margin-left:-10px;
-	}
+  order: 0;
+  margin-left: -10px;
+}
 
 .header {
-  order: 1;  
-  margin-left:10px;
+  order: 1;
+  margin-left: 10px;
   font-size: 14px;
   font-family: "Open Sans";
 }
@@ -580,11 +679,10 @@ this.bufferTeams.splice(i,1);
 .md-drawer {
   width: 258px;
   max-width: calc(100vw - 135px);
-  top: 86px!important;
-  
+  top: 86px !important;
 }
 
-.emptitle{
+.emptitle {
   position: relative;
   width: 97px;
   height: 25px;
@@ -595,22 +693,22 @@ this.bufferTeams.splice(i,1);
   font-size: 16px;
   line-height: 25px;
   color: #202031;
-  top:4px;
+  top: 4px;
 }
-.employeedd { 
+.employeedd {
   position: relative;
   width: 110px;
-  left: 28px;  
+  left: 28px;
 }
-.newteam {  
-  width: 218px!important;
+.newteam {
+  width: 218px !important;
   height: 40px;
-  left: 30px!important;
+  left: 30px !important;
   font-family: Open Sans;
   font-style: normal;
   font-weight: normal;
   line-height: 19px;
-  color: #B2B2BF;
+  color: #b2b2bf;
   margin-top: -25px;
 }
 
@@ -623,7 +721,7 @@ this.bufferTeams.splice(i,1);
 }
 
 .userlist-item {
-  text-align: left;  
+  text-align: left;
 }
 
 .userlist-mark-red {
@@ -635,20 +733,26 @@ this.bufferTeams.splice(i,1);
   border: 1px solid #41db04;
   box-sizing: border-box;
 }
-.panelborder{  
+.panelborder {
   padding: 0px;
   margin: 0px;
   border-radius: 4px;
-  margin-top:10px;  
+  margin-top: 10px;
 }
-.selectiondiv{
+.selectiondiv {
   /* height: auto; */
-  overflow-y:scroll;
-  margin-top:10px
+  overflow-y: scroll;
+  margin-top: 10px;
 }
 
->>>.v-expansion-panel-content__wrap { padding: 0 !important; }
+.userlist-mark-green {
+  margin-top:5px;
+  border: 1px solid #41db04;
+  box-sizing: border-box;
+}
 
-  
+>>> .v-expansion-panel-content__wrap {
+  padding: 0 !important;
+}
 </style>
 

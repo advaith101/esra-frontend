@@ -67,7 +67,7 @@ export default {
                             email:this.userName,
                             password:this.pwd
                         });
-                    
+                    localStorage.setItem('userid',res.data.user.UserID)
                     localStorage.setItem('token',res.data.token);
                     localStorage.setItem('refreshtoken',res.data.refreshToken);
                     localStorage.setItem('userName',res.data.user.Name)

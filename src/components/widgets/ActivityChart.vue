@@ -50,7 +50,7 @@ export default {
       series: [],
       activityChartSeries: [],
       activityOptions: {
-        chart: {
+        chart: {  
           height: 295,
           type: "line",
           stacked: false,
@@ -98,13 +98,14 @@ export default {
           },
         },
         xaxis: {
+          x: new Date('01 Jan 1970').getTime(),
           //  categories: ['1','2','3','4','5','6','7','8','9','10'],
           //tickAmount: 10,
           //type:'datetime',
-          tickAmount: 1,
+          //tickAmount: 1,
           //categories:[this.startDate,this.endDate],
           labels: {
-            show: false,
+            show: true,
             rotate: 0,
             style: {
               color: "#828288",
@@ -256,7 +257,7 @@ export default {
             var data1 = [];
             data.values.forEach((data) => {
               var obj = {
-                x: moment(data.endtime).format("MM/DD/YYYY"),
+                x: /*moment(data.endtime).format("MM/DD/YYYY,h:mm:ss a")*/data.endtimeMilliseconds,
                 y: parseInt(data.value),
               };
               data1.push(obj);
@@ -280,7 +281,7 @@ export default {
             ...{
               xaxis: {
                 ...this.activityOptions.xaxis,
-                //type: "datetime",
+                type: "datetime",
                 //categories: [this.startDate,this.endDate],
                 // tickAmount: 10,
               },
@@ -305,7 +306,7 @@ export default {
                   },
                 },
                 x: {
-                  show:false,
+                  show:true,
                   formatter: (val, opt) => {
                     try {
                       return moment(

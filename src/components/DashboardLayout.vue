@@ -357,7 +357,7 @@ export default {
       this.addSelectedTeamNames();     
     }
     else {
-      this.selectedApps = this.apps.map((app) => app.applicationid)
+      //this.selectedApps = this.apps.map((app) => app.applicationid)
       //console.log(this.selectedApps)
     }
   },  
@@ -427,6 +427,7 @@ export default {
           {id:'activity',title:"Interaction",color:"#144584"},
           {id:'activetime',title:"Active Time",color:"#202031"},
           {id:'idletime',title:"Idle Time",color:"#202031"},
+          {id:'composite',title:'Composite',color:"#202031"}
         ],      
       selectedActivityforRadar:'activity',
       selectedActivityTextforRadar:'Interaction',
