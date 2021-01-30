@@ -105,7 +105,7 @@ export default {
           //tickAmount: 1,
           //categories:[this.startDate,this.endDate],
           labels: {
-            show: true,
+            show: false,
             rotate: 0,
             style: {
               color: "#828288",
@@ -306,7 +306,7 @@ export default {
                   },
                 },
                 x: {
-                  show:true,
+                  show:false,
                   formatter: (val, opt) => {
                     try {
                       return moment(

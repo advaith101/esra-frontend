@@ -93,22 +93,21 @@ export default {
         getReqBody(){
             var teamIDs = this.selectedEntities.filter(x => x.type === "team" && x.isSelected).map(y => y.id);
             var userIDs = this.selectedEntities.filter(x => x.type === "user" && x.isSelected).map(y => y.id);
-            // var post_data = {
-            //     teamIDs: teamIDs,
-            //     userIDs: userIDs,
-            //     timeMode: this.timeMode,
-            //     enddate:this.dateRange.endDate,
-            //     startdate:this.dateRange.startDate,
-            //     applicationIDs:this.selectedApps
-            // }
-            //console.log(teamIDs,userIDs)
             var post_data = {
-                teamIDs: [20,21],
-                userIDs: [1,2,3],
-                enddate:"2020-11-27",
-                startdate:"2020-11-01",
-                //applicationIDs:[1,2,3,4,5]
+                teamIDs: teamIDs,
+                userIDs: userIDs,
+                timeMode: this.timeMode,
+                enddate:this.dateRange.endDate,
+                startdate:this.dateRange.startDate,
             }
+            //console.log(teamIDs,userIDs)
+            // var post_data = {
+            //     teamIDs: [20,21],
+            //     userIDs: [1,2,3],
+            //     enddate:"2020-11-27",
+            //     startdate:"2020-11-01",
+            //     //applicationIDs:[1,2,3,4,5]
+            // }
             if (this.selectedApps.length) {
                 post_data = {...post_data, applicationIDs:this.selectedApps};
             }

@@ -46,7 +46,13 @@
         >
       </template>
       <template v-slot:item.composite="{ item }">
-        <span>{{ parseInt(item.composite) }}</span>
+        <span>{{ parseInt(item.composite) }}</span><br/>
+        <span v-if="item.activity_pct >= 0" style="color: green">
+          &#8593; {{ Math.round(item.activity_pct) }} &#37;</span
+        >
+        <span v-else style="color: red">
+          &#8595; {{ Math.round(item.activity_pct) }} &#37;</span
+        >
       </template>
     </v-data-table>
   </v-card>

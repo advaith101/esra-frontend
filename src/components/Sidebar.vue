@@ -424,8 +424,8 @@ export default {
       this.colors.splice(0, 1);
     },
     removeTeam(teamID) {
-      var index = this.selectedTeams.findIndex((x) => x.TeamID === teamID);
-      this.selectedTeams.splice(index, 1);
+      var index = this.selectedItems.findIndex((x) => x.TeamID === teamID);
+      this.selectedItems.splice(index, 1);
     },
     toggleTeam(toggindex) {
       this.selectedTeams.forEach((team /*, index*/) => {
