@@ -3,13 +3,13 @@
     <v-chip-group>
       <v-chip
         label
-        :ref="'chip_'+user.type + user.id"
+        :ref="'chip_' + user.type + user.id"
         outlined
         v-bind:key="index"
         v-for="(user, index) in selectedEntities"
         @click="
           user.isSelected = !user.isSelected;
-          updateBorder(user,true);
+          updateBorder(user, true);
         "
       >
         {{ user.name }}
@@ -17,41 +17,41 @@
         <v-icon v-else x-small right>mdi-eye-off</v-icon>
       </v-chip>
     </v-chip-group>
-<div v-if="radarChartSeries.length > 0">
-    <apexchart
-    ref="radarchart"
-      type="radar"
-      :series="radarChartSeries"
-      :options="radarOptions"
-      height="250"      
-    ></apexchart>
+    <div v-if="radarChartSeries.length > 0">
+      <apexchart
+        ref="radarchart"
+        type="radar"
+        :series="radarChartSeries"
+        :options="radarOptions"
+        height="250"
+      ></apexchart>
     </div>
-   <div v-else>
-     <apexchart
-      type="radar"
-      :series="series"
-      :options="radarOptions"
-      height="250"      
-    ></apexchart>
-   </div>
+    <div v-else>
+      <apexchart
+        type="radar"
+        :series="series"
+        :options="radarOptions"
+        height="250"
+      ></apexchart>
+    </div>
   </div>
 </template>
 
 <script>
-import moment from 'moment';
+import moment from "moment";
 export default {
   async created() {
-   // this.getRadarChartData();
-  // this.selectedEntities = Object.assign([{}], this.$store.state.selectedEntities);
-  this.series.push({name:" ", data:[]});
+    // this.getRadarChartData();
+    // this.selectedEntities = Object.assign([{}], this.$store.state.selectedEntities);
+    this.series.push({ name: " ", data: [] });
   },
   data() {
     return {
-     // reqPayload:{},
-      chartData:[],
+      // reqPayload:{},
+      chartData: [],
       radarChartSeries: [],
-      series:[],
-    //  selectedEntities:[],
+      series: [],
+      //  selectedEntities:[],
       radarOptions: {
         chart: {
           height: 350,
@@ -120,95 +120,106 @@ export default {
       },
     };
   },
-  props:['selectedEntities', 'selectedApps','mode','dateRange','timeMode'],
+  props: ["selectedEntities", "selectedApps", "mode", "dateRange", "timeMode"],
   // computed: {
   //   selectedEntities: function() {
   //     return this.$store.state.selectedEntities.map(x => Object.assign({},x));
   //    //return this.$store.state.selectedEntities;
   //   },
   // },
- async mounted() {
-   // this.selectedEntities =Object.assign({}, this.$store.state.selectedEntities);
-   this.$watch(vm => [vm.selectedEntities,vm.selectedApps, vm.dateRange,vm.timeMode,vm.mode],async(val) => {       
-    await  this.getRadarChartData(); 
-     // setTimeout(() => {
-        this.selectedEntities.forEach(element => {
-       this.updateBorder(element);
-     });
-    // }, 100);     
-    }, {
-      immediate: true, // run immediately
-      deep: true // detects changes inside objects. not needed here, but maybe in other cases
-    }) 
+  async mounted() {
+    // this.selectedEntities =Object.assign({}, this.$store.state.selectedEntities);
+    this.$watch(
+      (vm) => [
+        vm.selectedEntities,
+        vm.selectedApps,
+        vm.dateRange,
+        vm.timeMode,
+        vm.mode,
+      ],
+      async (val) => {
+        await this.getRadarChartData();
+        // setTimeout(() => {
+        this.selectedEntities.forEach((element) => {
+          this.updateBorder(element);
+        });
+        // }, 100);
+      },
+      {
+        immediate: true, // run immediately
+        deep: true, // detects changes inside objects. not needed here, but maybe in other cases
+      }
+    );
   },
   methods: {
-    updateBorder(user, refreshChart ) {      
-      var control = this.$refs["chip_" +user.type+ user.id][0].$el;
+    updateBorder(user, refreshChart) {
+      var control = this.$refs["chip_" + user.type + user.id][0].$el;
       if (user.isSelected) {
         control.style.borderColor = user.color;
         control.style.setProperty("color", user.color, "important");
-        
       } else {
         control.style.borderColor = "grey";
         control.style.setProperty("color", "black", "important");
-      }      
-      // if (refreshChart ) {  
+      }
+      // if (refreshChart ) {
       //   try {
       //   this.getRadarChartData();
       //   } catch (error) {
       //     alert(error);
-          
-      //   }           
-       
+
+      //   }
+
       // }
     },
     getRequestPayload() {
-      var teamIDs = this.selectedEntities.filter(x => x.type === "team" && x.isSelected).map(y => y.id);
-      var userIDs = this.selectedEntities.filter(x => x.type === "user" && x.isSelected).map(y => y.id);
-      var mode = this.mode;
-      var applicationIDs = this.selectedApps;
-       let reqPayload = {
-        mode:this.mode.toLowerCase(),
-        timeMode:this.timeMode,        
+      var teamIDs = this.selectedEntities
+        .filter((x) => x.type === "team" && x.isSelected)
+        .map((y) => y.id);
+      var userIDs = this.selectedEntities
+        .filter((x) => x.type === "user" && x.isSelected)
+        .map((y) => y.id);
+      let reqPayload = {
+        mode: this.mode.toLowerCase(),
+        timeMode: this.timeMode,
         teamIDs: teamIDs,
         userIDs: userIDs,
-        enddate: moment(this.dateRange.endDate).format('YYYY-MM-DD HH:mm:ss'),
-        startdate: moment(this.dateRange.startDate).format('YYYY-MM-DD HH:mm:ss'),
-      }
+        enddate: moment(this.dateRange.endDate).format("YYYY-MM-DD HH:mm:ss"),
+        startdate: moment(this.dateRange.startDate).format(
+          "YYYY-MM-DD HH:mm:ss"
+        ),
+      };
       if (this.selectedApps.length) {
-        reqPayload = {...reqPayload, applicationIDs:this.selectedApps};
+        reqPayload = { ...reqPayload, applicationIDs: this.selectedApps };
       }
       return reqPayload;
     },
     async getRadarChartData() {
-       var payload = this.getRequestPayload();
-        this.radarChartSeries = [];
-    if (!payload.userIDs.length && !payload.teamIDs.length) {
-      //this.insightNumber = 0;
-      return;
-    }
+      var payload = this.getRequestPayload();
+      this.radarChartSeries = [];
+      if (!payload.userIDs.length && !payload.teamIDs.length) {
+        //this.insightNumber = 0;
+        return;
+      }
       try {
-        var res = await this.$apiService.post("/users/spiderchart",payload);
+        var res = await this.$apiService.post("/users/spiderchart", payload);
         if (res) {
           this.chartData = res.data.result;
-         
+
           const categories = [];
           var colors = [];
           this.chartData.forEach((data) => {
-            var entity = this.selectedEntities.filter(x => x.id === data.id && x.type === data.type)[0];
-            colors = [... colors,entity.color];
-             this.radarChartSeries.push({       
-             
-              name: entity.name,                
-            data:data.values.map(x =>parseInt(x.value))
+            var entity = this.selectedEntities.filter(
+              (x) => x.id === data.id && x.type === data.type
+            )[0];
+            colors = [...colors, entity.color];
+            this.radarChartSeries.push({
+              name: entity.name,
+              data: data.values.map((x) => parseInt(x.value)),
             });
             //description.push(data.values.map(x =>x.name));
-            categories.push(
-              ...data.values.map((x) => x.name));       
-              
-            
+            categories.push(...data.values.map((x) => x.name));
           });
-          
+
           // payload.userIDs.forEach((userID) => {
           //   const data = response.filter(
           //     (x) => x.id ===userID && x.type === "user");
@@ -239,35 +250,38 @@ export default {
             ...{
               xaxis: {
                 ...this.radarOptions.xaxis,
-                categories: categories
+                categories: categories,
               },
               colors: colors,
-               tooltip: { y: { formatter: (val,opt) => { 
-                
-     
-      try {
-        var values = this.chartData[opt.seriesIndex].values[opt.dataPointIndex];
-    const value = values.value;
-    return values.name + ': ' + value
-      } catch (error) {
-       // console.log(opt.seriesIndex,opt.dataPointIndex);
-      }
-return '';
+              tooltip: {
+                y: {
+                  formatter: (val, opt) => {
+                    try {
+                      var values = this.chartData[opt.seriesIndex].values[
+                        opt.dataPointIndex
+                      ];
+                      const value = values.value;
+                      return values.name + ": " + value;
+                    } catch (error) {
+                      // console.log(opt.seriesIndex,opt.dataPointIndex);
+                    }
+                    return "";
+                  },
+                },
+                x: {
+                  formatter: (val, opt) => {
+                    try {
+                      return this.chartData[opt.seriesIndex].values[
+                        opt.dataPointIndex
+                      ].name;
+                    } catch (error) {}
 
-     }},
-    x: { formatter: (val,opt) => { 
-                
-               try {
-                 return  this.chartData[opt.seriesIndex].values[opt.dataPointIndex].name
-                  
-               } catch (error) {
-                 
-               }
-   
-    return  "" } }},
+                    return "";
+                  },
+                },
+              },
             },
           };
-
         }
       } catch (error) {
         console.log(error);

@@ -15,7 +15,8 @@
                     v-for="user in teamMembers"
                     :key="user.UserID"
                     link                                      
-                    ref="userlist"        
+                    ref="userlist"  
+                    @click="selectMember(user)"      
                     >
                     <UserItem :user="user" />
 
@@ -44,6 +45,12 @@ export default {
     data () {
         return {
             teamMembers: []
+        }
+    },
+    methods:{
+        selectMember(user){
+            //console.log('user in team selected:',user.Name)
+            this.$emit('teamselect',user);
         }
     }
 }

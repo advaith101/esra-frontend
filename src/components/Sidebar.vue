@@ -164,7 +164,7 @@
                 </span>
               </v-expansion-panel-header>
               <v-expansion-panel-content>
-                <TeamItem :allUsers="allUsers" :team="team" />
+                <TeamItem v-on:teamselect="selectforTeam" :allUsers="allUsers" :team="team" />
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
@@ -300,11 +300,15 @@ export default {
     };
   },
   computed: {
+    userids:function(){
+      return this.selectedUsers.map((item) => { return item.UserID})
+    },
     selectedTeams:function(){
-      return this.selectedItems.filter((user)=>{return user.type=='team'})
+      return this.selectedItems.filter((user)=>{ return user.type=='team' })
     },
     selectedUsersforManager:function(){
-      return this.selectedItems.filter((user)=>{return user.type=='user'})
+       return this.selectedItems.filter((user)=>{return ((user.type=='user') && !(this.userids.includes(user.UserID)))})
+
     },
     filteredUsers: function () {
       return this.selectedUsers.concat(this.selectedUsersforManager); /*.filter((item) => /*{
@@ -313,6 +317,9 @@ export default {
     },
   },
   watch: {
+    selectedUsers:function(){
+      console.log('entities:',this.userids)
+    },
     selectedTeams:function(){
       console.log(this.selectedTeams)
     },
@@ -334,6 +341,8 @@ export default {
     selectedMode: function () {
       this.$emit("mode-change", this.selectedMode);
       this.getUsers();
+      this.getUsersandTeams();
+      this.created();
     },
 
     selectedTeams: function (value) {
@@ -395,10 +404,19 @@ export default {
       (vm) => [vm.timeMode, vm.dateRange],
       (val) => {
         this.getUsers();
+        this.getUsersandTeams();
       }
     );
   },
   methods: {
+    selectforTeam:function(user){
+      if(this.userids.includes(user.UserID)){
+        //alert('already selected')
+      }
+      else{
+        this.crudUser(user);
+      }
+    },
     checkMaximumAllowed() {
       if (this.selectedTeams.length + this.selectedUsers.length > 5) {
         this.selectedTeams.splice(this.selectedTeams.length - 1, 1);
@@ -407,6 +425,11 @@ export default {
       } else {
         this.addSelectedTeamNames();
       }
+      var itemids = this.selectedItems.map((item)=> {return item.UserID})
+      console.log('item',itemids)
+      console.log(this.selectedItems[0])
+      console.log(this.selectedTeams[0])
+      console.log(this.selectedUsersforManager[0])
     },
     addSelectedTeamNames() {
       this.selectedTeamNames = "";
@@ -426,6 +449,7 @@ export default {
     removeTeam(teamID) {
       var index = this.selectedItems.findIndex((x) => x.TeamID === teamID);
       this.selectedItems.splice(index, 1);
+      this.addSelectedTeamNames();
     },
     toggleTeam(toggindex) {
       this.selectedTeams.forEach((team /*, index*/) => {
@@ -614,7 +638,7 @@ export default {
         var index = this.selectedUsers.indexOf(user);
         this.selectedUsers.splice(index, 1);
         this.users.splice(user.UserID, 0, user);
-        this.selectedUsersforManager.splice(user.UserID,0,user)
+        //this.selectedUsersforManager.splice(user.UserID,0,user)
         this.users.sort((a, b) => {
           return a.UserID - b.UserID;
         });
