@@ -17,6 +17,15 @@
           :series="comparisonBarChartSeries[i-1]"
         ></apexchart>
       </div>
+      <!-- <div>
+        <DocInsightChart
+          ref="documentChart"
+          :selectedEntities="selectedEntitiesforDocument"
+          :dateRange="dateRange"
+          :timeMode="timeMode"
+          :selectedApps="selectedApps"
+          />
+      </div> -->
     </VueSlickCarousel>
     <apexchart
       v-if="comparisonBarNumber < 1"
@@ -32,6 +41,7 @@
 
 <script>
 import moment from "moment";
+// import DocInsightChart from "./DocInsightChart";
 import VueSlickCarousel from "vue-slick-carousel";
 import "vue-slick-carousel/dist/vue-slick-carousel.css";
 // optional style for arrows & dots
@@ -41,7 +51,7 @@ export default {
     this.series.push({name:"", data:[]});
   },
   components: {
-    VueSlickCarousel,
+    VueSlickCarousel
   },
   data() {
     return {

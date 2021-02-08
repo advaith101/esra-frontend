@@ -161,7 +161,7 @@
 				<v-row>
 					<v-flex lg5>
 						<FeedChart :dateRange="dateRange" :timeMode="timeMode" />
-						<v-col cols="12">
+						<!-- <v-col cols="12">
 							<v-row>
 								<v-flex lg12 xs12>
 									<div :class="{ panelrightmargin: $vuetify.breakpoint.mobile }">
@@ -208,8 +208,8 @@
 									</div>
 								</v-flex>
 							</v-row>
-						</v-col>
-						<v-col cols="12" style="margin-top:-25px">
+						</v-col> -->
+						<v-col cols="12" style="margin-top:-1px">
 							<v-row>
 								<v-flex lg12>
 									<div :class="{ panelrightmargin: $vuetify.breakpoint.mobile }">
@@ -266,7 +266,7 @@
 								accordion
 								:value="0"
 								class="panelborder"
-								style="height:805px;"
+								style="height:529px;"
 								:class="{ panelleftmargin: $vuetify.breakpoint.lgAndUp }"
 							>
 								<v-expansion-panel>

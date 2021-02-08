@@ -12,7 +12,7 @@
 			<hr />
 			<div v-if="showLoader" class="center-align">Loading...</div>
 			<div v-if="!showLoader && getFeeds.length === 0" class="center-align">No Data to show</div>
-			<ul v-if="!showLoader && getFeeds !== []" style="height: 200px; overflow: auto">
+			<ul v-if="!showLoader && getFeeds !== []" style="height: 150px; overflow: auto">
 				<li v-for="(feed, index) in getFeeds" :key="index" class="list-style">
 					<img :src="getImageIcon(feed.message)" />
 					<div>
@@ -130,7 +130,7 @@ export default {
 <style scoped>
 .feed-data {
 	scrollbar-color: #ffffff;
-	height: 300px;
+	height: 250px;
 	background-color: #ffffff;
 	border-radius: 12px;
 	border: 1px solid #e9e9e9;
