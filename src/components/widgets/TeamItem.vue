@@ -13,7 +13,7 @@
                 >
                     <v-list-item
                     v-for="user in teamMembers"
-                    :key="user.UserID"
+                    :key="user.UserID+'_'+ `${user.color &&user.color.indexOf('#') > -1 ? user.color.split('#')[1] : user.color}`"
                     link                                      
                     ref="userlist"  
                     @click="selectMember(user)"      
@@ -51,7 +51,18 @@ export default {
         selectMember(user){
             //console.log('user in team selected:',user.Name)
             this.$emit('teamselect',user);
-        }
+        },
+       updateColor(user) {
+           var index = this.teamMembers.findIndex(x => x.UserID === user.UserID);
+           if (index > -1) {           
+          
+                   this.teamMembers[index].color = user.color;
+            
+            var teamMembersCopy = Object.assign([], this.teamMembers);
+            this.teamMembers = teamMembersCopy;
+
+           }
+       } 
     }
 }
 </script>

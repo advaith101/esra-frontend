@@ -23,7 +23,7 @@
             :loading="!values.length>0 && selectedEntities.length!=0"
             no-data-text="Insufficient Data"
             height="300"
-            items-per-page="5"
+            items-per-page=5
         >
             <template v-slot:item.active_time="{ item }">
                 <span>{{item.active_time}}</span><br/>

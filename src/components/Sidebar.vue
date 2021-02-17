@@ -89,6 +89,7 @@
                       multiple
                       return-object
                       v-model="selectedUsersAddtoTeam"
+                      :key="selectedUsersAddtoTeam"
                       :items="allUsers"
                       item-text="Name"
                       placeholder="Select Users.."></v-autocomplete>
@@ -115,6 +116,7 @@
                   multiple
                   return-object
                   v-model="selectedUsersAddtoTeam"
+                  :key="selectedUsersAddtoTeam"
                   :items="allUsers"
                   item-text="Name"
                   placeholder="Select users"
@@ -164,7 +166,7 @@
                 </span>
               </v-expansion-panel-header>
               <v-expansion-panel-content>
-                <TeamItem v-on:teamselect="selectforTeam" :allUsers="allUsers" :team="team" />
+                <TeamItem :ref="'teamitem_' + team.TeamID" v-on:teamselect="selectforTeam" :allUsers="allUsers" :team="team" />
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
@@ -501,10 +503,11 @@ export default {
           "/common/addTeamWithUsers",
           post_data
         );
-        if (res.data.status == "ok") {
+        if (res.data.status === "ok") {
           this.dialog = false;
           this.selectedUsers = [];
-          this.getTeams();
+         // this.getTeams();
+          this.getUsersandTeams();
         }
       } catch (error) {
         console.log(error);
@@ -626,6 +629,14 @@ export default {
       console.log(this.selectedUser.includes(user));
       return true;
     },
+    updateUserColorinTeam(user) {
+this.selectedTeams.forEach(team => {//debugger;
+  var element = this.$refs["teamitem_" + team.TeamID];
+  if (element) {
+    element[0].updateColor(user);
+  }
+});
+    },
 
     crudUser(user, entitiesInStore) {
       //  alert((this.selectedTeams.length + this.selectedUsers.length));
@@ -646,6 +657,7 @@ export default {
         user.color = "white";
         this.allUsers = this.selectedUsers.concat(this.users);
         this.changeStore(user, "user");
+        this.updateUserColorinTeam(user);
       } else if (this.$store.state.selectedEntities.length < 5) {
         this.selectedUsers.splice(0, 0, user);
         this.selectedUsers.forEach((element) => {
@@ -664,6 +676,7 @@ export default {
         if (!entitiesInStore) {
           this.changeStore(user, "user");
         }
+        this.updateUserColorinTeam(user);
       }
     },
 

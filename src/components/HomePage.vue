@@ -14,10 +14,10 @@
         style="width:278px;background-color:#FAFAFA;"
       >
         <md-app-toolbar style="background-color:#FFFFFF;height:78px;cursor:pointer" >
-          <span class="title" @click="$router.push('/home')"
+          <!-- <span class="title" @click="$router.push('/home')"
             >Tempo
             <pre class="subTitle"> Esra Systems, LLC </pre></span
-          >
+          > -->
         </md-app-toolbar>
 
         <Sidebar v-on:mode-change="modeUpdate" :timeMode="timeMode" :dateRange="dateRange"  :searchString="searchString" />

@@ -51,7 +51,7 @@
 				<v-row>
 					<v-flex lg7 xs12>
 						<div :class="{ panelrightmargin: $vuetify.breakpoint.mobile }">
-							<v-expansion-panels accordion :value="0" class="panelborder">
+							<v-expansion-panels accordion :value="0" class="panelborder elevation-0">
 								<v-expansion-panel>
 									<v-expansion-panel-header class="paneltitle" expand-icon="mdi-menu-down"
 										>Total
@@ -72,7 +72,7 @@
 									</v-expansion-panel-header>
 									<v-expansion-panel-content style="min-height:350px">
 										<hr />
-										<VueSlickCarousel :arrows="true" :dots="true" style="margin-bottom:10px">
+										<VueSlickCarousel :arrows="true" :dots="true" :swipe="false" :swipeToSlide="false" :touchMove="false" :draggable="false" style="margin-bottom:10px">
 											<div>
 												<ActivityChart
 													:selectedEntities="selectedEntitiesforActivity"
@@ -105,7 +105,7 @@
 
 					<v-flex lg5 xs12>
 						<div class="panelrightmargin">
-							<v-expansion-panels accordion :value="0" class="panelborder" :class="{ panelleftmargin: $vuetify.breakpoint.lgAndUp }">
+							<v-expansion-panels accordion :value="0" class="panelborder elevation-0" :class="{ panelleftmargin: $vuetify.breakpoint.lgAndUp }">
 								<v-expansion-panel>
 									<v-expansion-panel-header class="paneltitle" expand-icon=""
 										>{{ insightTitle }}
@@ -213,7 +213,7 @@
 							<v-row>
 								<v-flex lg12>
 									<div :class="{ panelrightmargin: $vuetify.breakpoint.mobile }">
-										<v-expansion-panels accordion :value="0" class="panelborder">
+										<v-expansion-panels accordion :value="0" class="panelborder elevation-0">
 											<v-expansion-panel style="height:260px">
 												<v-expansion-panel-header class="paneltitle" expand-icon=""
 													>{{ comparisonChartTitle }}
@@ -265,7 +265,7 @@
 							<v-expansion-panels
 								accordion
 								:value="0"
-								class="panelborder"
+								class="panelborder elevation-0"
 								style="height:529px;"
 								:class="{ panelleftmargin: $vuetify.breakpoint.lgAndUp }"
 							>
@@ -724,7 +724,7 @@ hr {
 	border-radius: 12px;
 	margin-top: 5px;
 	box-sizing: border-box;
-	filter: drop-shadow(0px 4px 32px rgba(0, 49, 104, 0.05));
+	/* filter: drop-shadow(0px 4px 32px rgba(0, 49, 104, 0.05)); */
 }
 /* >>>.v-select__slot,.v-select__selections {  
   height: 35px;     
@@ -782,6 +782,10 @@ flex: 1 0 10% ;
 }
 .pagemargin {
 	margin-left: 20px;
+}
+
+>>>.v-expansion-panel::before {
+   box-shadow: none !important;
 }
 @media (max-width: 768px) {
 	.pagelayout {

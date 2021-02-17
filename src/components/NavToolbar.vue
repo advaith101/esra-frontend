@@ -4,7 +4,7 @@
   <v-col cols="12">
       <v-row>
           <v-flex lg9>
-            <v-text-field
+            <!-- <v-text-field
                         class="searchbar"            
                        dense
                         outlined            
@@ -13,7 +13,11 @@
                         v-on:keydown="keyPress"
                 >
                 <v-img slot="prepend-inner" class='search-icon' :src="require('@/assets/icons/search.png')"></v-img>
-            </v-text-field>
+            </v-text-field> -->
+            <span class="title" @click="$router.push('/home')"
+            >Tempo
+            <pre class="subTitle"> Esra Systems, LLC </pre></span
+          > 
           </v-flex>
           <v-flex lg2>
                <v-row >
@@ -94,13 +98,13 @@ export default {
             this.showNotification = !this.showNotification
             this.$emit('notif-toggle', this.showNotification)
         },
-        keyPress:function(event) {
-            setTimeout(() => {
-                if(this.isalnum(event.key)) {
-                    this.$emit('search-item',this.searchString)
-                }
-            }, 50)
-        },
+        // keyPress:function(event) {
+        //     setTimeout(() => {
+        //         if(this.isalnum(event.key)) {
+        //             this.$emit('search-item',this.searchString)
+        //         }
+        //     }, 50)
+        // },
         isalnum:function(c) {
             return ((((c >= 'a') && (c <= 'z')) || ((c >= 'A') && (c <= 'Z'))) || ((c >= '0') && (c <= '9')))
         },
@@ -200,4 +204,25 @@ width: 250px;
     padding: 0px 25px;
     margin-right: 10px;
   }
+.title {
+  left: 30px;
+  top: 13px;
+  bottom: 28px;
+  font-family: Righteous;
+  font-style: normal;
+  font-weight: bolder;
+  font-size: 30px;
+  line-height: 37px;
+  color: #144584;
+}
+.subTitle {
+  top: 29px;
+  bottom: 14px;
+  font-family: Righteous;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 15px;
+  color: #c0cbe4;
+}  
 </style>
