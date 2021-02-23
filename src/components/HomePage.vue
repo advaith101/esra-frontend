@@ -1,7 +1,7 @@
 <template>
   <div class="page-container">
     <md-app md-waterfall md-mode="fixed">
-      <md-app-toolbar style="background-color:white">
+      <md-app-toolbar style="background-color:#FAFAFA">
         <md-button class="md-icon-button hidden-md-and-up" @click="menuVisible = !menuVisible">
           <v-icon style="color:black">mdi-menu</v-icon>
         </md-button>
@@ -13,7 +13,7 @@
         md-permanent="full"
         style="width:278px;background-color:#FAFAFA;"
       >
-        <md-app-toolbar style="background-color:#FFFFFF;height:78px;cursor:pointer" >
+        <md-app-toolbar style="background-color:#FAFAFA;height:78px;cursor:pointer" >
           <!-- <span class="title" @click="$router.push('/home')"
             >Tempo
             <pre class="subTitle"> Esra Systems, LLC </pre></span

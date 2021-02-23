@@ -47,7 +47,7 @@ export default {
       startDate: "6/01/2020",
       endDate: "12/27/2020",
       // selectedEntities:[],
-      series: [],
+      series: [],      
       activityChartSeries: [],
       activityOptions: {
         chart: {  
@@ -83,7 +83,7 @@ export default {
           },
         },
         noData: {
-          text: "Loading...",
+          text: 'No entity selected',
         },
         yaxis: {
           labels: {
@@ -129,6 +129,7 @@ export default {
   //   },
   // },
   created() {
+   // this.activityOptions.noData.text = this.loadingText;        
     this.$watch(
       (vm) => [vm.dateRange, vm.timeMode, vm.selectedApps, vm.mode],
       async (val) => {
@@ -231,17 +232,20 @@ export default {
     },
     async getActivityChartData() {
       var payload = this.getRequestPayload();
-      this.activityChartSeries = [];
+      this.activityChartSeries = [];        
       if (!payload.userIDs.length && !payload.teamIDs.length) {
-        //this.insightNumber = 0;
+        //this.insightNumber = 0;        
+        this.activityOptions = {...this.activityOptions, noData:{text:'No entity selected'}};
         return;
       }
+      this.activityOptions = {...this.activityOptions, noData:{text:'Loading...'}};
       try {
         var res = await this.$apiService.post(
           "/users/activityAggregated",
           payload
         );
         if (res) {
+          
           // var response = res.data.result;
           this.chartData = res.data.result;
           let categories = [];

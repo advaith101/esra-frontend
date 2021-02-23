@@ -3,7 +3,7 @@
     <v-data-table
       :headers="headers"
       :items="values"
-      :loading="!values.length > 0"
+      :loading="!values.length > 0"      
     >
       <template v-slot:item.active_time="{ item }">
         <span>{{ item.active_time }}</span

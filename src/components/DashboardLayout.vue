@@ -51,14 +51,15 @@
 				<v-row>
 					<v-flex lg7 xs12>
 						<div :class="{ panelrightmargin: $vuetify.breakpoint.mobile }">
-							<v-expansion-panels accordion :value="0" class="panelborder elevation-0">
-								<v-expansion-panel>
-									<v-expansion-panel-header class="paneltitle" expand-icon="mdi-menu-down"
+							<!-- <v-expansion-panels accordion v-model="panelValue" @click.native.stop.prevent ="panelValue = 0" class="panelborder elevation-0">
+								<v-expansion-panel> -->
+									<v-card class="panelborder elevation-0">
+									<v-card-title hide-actions class="paneltitle" 
 										>Total
 
-										<v-menu max-width="120px">
+										<v-menu max-width="150px">
 											<template v-slot:activator="{ on, attrs }" style="margin-left:100px;">
-												<v-btn x-small text class="menutexttotal" color="tranparent" v-bind="attrs" v-on="on">
+												<v-btn x-small text class="menutexttotal"  color="tranparent" v-bind="attrs" v-on="on">
 													{{ selectedActivityTextforTotal }}
 													<img src="@/assets/icons/dropdown.png" style="cursor:pointer;" />
 												</v-btn>
@@ -69,17 +70,17 @@
 												</v-list-item>
 											</v-list>
 										</v-menu>
-									</v-expansion-panel-header>
-									<v-expansion-panel-content style="min-height:350px">
+									</v-card-title>
+									<v-card-text >
 										<hr />
-										<VueSlickCarousel :arrows="true" :dots="true" :swipe="false" :swipeToSlide="false" :touchMove="false" :draggable="false" style="margin-bottom:10px">
+										<VueSlickCarousel :style="{ maxHeight: activityPanelHeight + 'px' }" @afterChange="resetHeight" :arrows="true" :dots="true" :swipe="false" :swipeToSlide="false" :touchMove="false" :draggable="false" style="margin-bottom:10px">
 											<div>
 												<ActivityChart
 													:selectedEntities="selectedEntitiesforActivity"
 													:timeMode="timeMode"
 													:dateRange="dateRange"
 													:selectedApps="selectedApps"
-													:mode="selectedActivityforTotal"
+													:mode="selectedActivityforTotal"													
 												/>
 											</div>
 											<div>
@@ -88,7 +89,7 @@
 													:dateRange="dateRange"
 													:selectedApps="selectedApps"
 													:timeMode="timeMode"
-													:mode="selectedActivityforTotal"
+													:mode="selectedActivityforTotal"													
 												/>
 											</div>
 										</VueSlickCarousel>
@@ -97,22 +98,25 @@
       :boilerplate="false"
       type="card"
     ></v-skeleton-loader> -->
-									</v-expansion-panel-content>
-								</v-expansion-panel>
-							</v-expansion-panels>
+									</v-card-text>
+									</v-card>
+								<!-- </v-expansion-panel>
+							</v-expansion-panels> -->
 						</div>
 					</v-flex>
 
 					<v-flex lg5 xs12>
 						<div class="panelrightmargin">
-							<v-expansion-panels accordion :value="0" class="panelborder elevation-0" :class="{ panelleftmargin: $vuetify.breakpoint.lgAndUp }">
-								<v-expansion-panel>
-									<v-expansion-panel-header class="paneltitle" expand-icon=""
+							<!-- <v-expansion-panels accordion v-model="panelValue" @click.native.stop="panelValue = 0" class="panelborder elevation-0" :class="{ panelleftmargin: $vuetify.breakpoint.lgAndUp }">
+								<v-expansion-panel> -->
+									<v-card class="panelborder elevation-0" :class="{ panelleftmargin: $vuetify.breakpoint.lgAndUp }">
+										<v-card-title class="paneltitle cardtitle" style="min-height:62px;text-align:left"
 										>{{ insightTitle }}
-										<v-menu nudge-bottom="25">
+										<div style="right:0;position:absolute;height:50px">
+										<v-menu nudge-bottom="25" >
 											<template v-slot:activator="{ on, attrs }">
-												<v-btn x-small text color="transparent" v-bind="attrs" v-on="on">
-													<img src="@/assets/icons/dropdown.png" style="cursor:pointer;position:absolute;right:0px" />
+												<v-btn x-small right text color="transparent" v-bind="attrs" v-on="on">
+													<img src="@/assets/icons/dropdown.png" style="cursor:pointer;" />
 												</v-btn>
 											</template>
 											<v-list v-if="selectedEntities.length">
@@ -129,8 +133,9 @@
 												</v-list-item>
 											</v-list>
 										</v-menu>
-									</v-expansion-panel-header>
-									<v-expansion-panel-content style="min-height:350px">
+										</div>
+										</v-card-title>
+									<v-card-text style="min-height:350px">
 										<hr />
 										<v-btn-toggle v-model="selectedGraphMode" class="togglebtn" dense active-class="activetogglebtn">
 											<v-btn x-small>
@@ -150,9 +155,8 @@
 											:selectedApps="selectedApps"
 											:graphMode="selectedGraphMode"
 										/>
-									</v-expansion-panel-content>
-								</v-expansion-panel>
-							</v-expansion-panels>
+									</v-card-text>
+</v-card>
 						</div>
 					</v-flex>
 				</v-row>
@@ -213,16 +217,19 @@
 							<v-row>
 								<v-flex lg12>
 									<div :class="{ panelrightmargin: $vuetify.breakpoint.mobile }">
-										<v-expansion-panels accordion :value="0" class="panelborder elevation-0">
-											<v-expansion-panel style="height:260px">
-												<v-expansion-panel-header class="paneltitle" expand-icon=""
+										<!-- <v-expansion-panels accordion v-model="panelValue" @click.native.stop="panelValue = 0" class="panelborder elevation-0">
+											<v-expansion-panel style="height:260px"> 
+												<v-expansion-panel-header class="paneltitle" expand-icon=""-->
+													<v-card class="panelborder elevation-0" style="height:265px">
+														<v-card-title hide-actions class="paneltitle cardtitle" style="min-height:62px;margin-right:10px;white-space:pre-wrap"
 													>{{ comparisonChartTitle }}
-													<v-menu :fixed="true" left>
+													<div style="right:0;position:absolute;height:50px">
+													<v-menu >
 														<template v-slot:activator="{ on, attrs }">
 															<v-btn x-small text color="transparent" v-bind="attrs" v-on="on">
 																<img
 																	src="@/assets/icons/dropdown.png"
-																	style="cursor:pointer;position:absolute;right:0px"
+																	style="cursor:pointer;margin-top:25px"
 																/>
 															</v-btn>
 														</template>
@@ -230,7 +237,7 @@
 															<v-list-item
 																v-for="(item, index) in selectedEntitiesforComparison"
 																:key="index"
-																@click="updateComparisonChart(item)"
+																@click="updateComparisonChart(item);"
 															>
 																<v-list-item-title>{{ item.name }}</v-list-item-title>
 																<v-list-item-icon>
@@ -240,9 +247,21 @@
 															</v-list-item>
 														</v-list>
 													</v-menu>
-												</v-expansion-panel-header>
-												<v-expansion-panel-content>
+													</div>
+												</v-card-title>
+<v-card-text  >
 													<hr />
+													<!-- <VueSlickCarousel :arrows="true" :dots="true" :swipe="false" :swipeToSlide="false" :touchMove="false" :draggable="false" style="margin-bottom:10px"> -->
+														<!-- <div v-if="this.selectedEntitiesforComparison.filter((x) => x.isSelected).length === 1">
+															<DocInsightChart
+														ref="documentChart"
+														:selectedEntities="selectedEntitiesforComparison"
+														:dateRange="dateRange"
+														:timeMode="timeMode"
+														:selectedApps="selectedApps"
+													/>
+														</div>
+														<div v-else> -->
 													<ComparisonBarChart
 														@updateComparisonBarChartTitle="updateComparisonBarChartTitle"
 														ref="comparisonChart"
@@ -251,9 +270,10 @@
 														:timeMode="timeMode"
 														:selectedApps="selectedApps"
 													/>
-												</v-expansion-panel-content>
-											</v-expansion-panel>
-										</v-expansion-panels>
+														<!-- </div> -->
+													<!-- </VueSlickCarousel> -->
+												</v-card-text>
+</v-card>
 									</div>
 								</v-flex>
 							</v-row>
@@ -262,18 +282,22 @@
 
 					<v-flex lg7>
 						<div class="panelrightmargin">
-							<v-expansion-panels
+							<!-- <v-expansion-panels
 								accordion
-								:value="0"
+								v-model="panelValue" @click.native.stop="panelValue = 0"
 								class="panelborder elevation-0"
 								style="height:529px;"
 								:class="{ panelleftmargin: $vuetify.breakpoint.lgAndUp }"
 							>
 								<v-expansion-panel>
-									<v-expansion-panel-header class="paneltitle" expand-icon="mdi-menu-down"
+									<v-expansion-panel-header class="paneltitle" expand-icon="mdi-menu-down" -->
+										<v-card class="panelborder elevation-0"
+										style="height:529px;"
+								:class="{ panelleftmargin: $vuetify.breakpoint.lgAndUp }">
+<v-card-title hide-actions class="paneltitle"
 										>App
 
-										<v-menu max-width="120px">
+										<v-menu max-width="150px">
 											<template v-slot:activator="{ on, attrs }" style="margin-left:100px">
 												<v-btn x-small text class="menutext" color="tranparent" v-bind="attrs" v-on="on">
 													{{ selectedActivityTextforRadar }}
@@ -286,8 +310,8 @@
 												</v-list-item>
 											</v-list>
 										</v-menu>
-									</v-expansion-panel-header>
-									<v-expansion-panel-content>
+									</v-card-title>
+<v-card-text >
 										<hr />
 										<VueSlickCarousel :arrows="true" :dots="true" style="margin-bottom:10px;">
 											<div>
@@ -309,9 +333,8 @@
 												/>
 											</div>
 										</VueSlickCarousel>
-									</v-expansion-panel-content>
-								</v-expansion-panel>
-							</v-expansion-panels>
+									</v-card-text>
+</v-card>
 						</div>
 					</v-flex>
 				</v-row>
@@ -399,6 +422,7 @@ export default {
 	},
 	data() {
 		return {
+			activityPanelHeight: 380,
 			insightTitle: "",
 			comparisonChartTitle: "",
 			// selected:[],
@@ -503,13 +527,15 @@ export default {
 				}
 			});
 			item.isSelected = !item.isSelected;
+			
 		},
-		async updateComparisonChart(item) {
-			var selectedNumber = this.selectedEntitiesforComparison.filter((x) => x.isSelected).length;
+		async updateComparisonChart(item) {//debugger;
+			var selectedNumber = this.selectedEntitiesforComparison.filter((x) => x.isSelected).length;			
+			
 			if (item.isSelected) {
 				if (selectedNumber !== 1) {
 					item.isSelected = false;
-				}
+				}				
 				return;
 			}
 			// selectedNumber = this.selectedEntitiesforInsight.filter(x => x.isSelected);
@@ -523,6 +549,10 @@ export default {
 			}
 
 			item.isSelected = !item.isSelected;
+			//alert(this.selectedEntitiesforComparison.length)
+			//this.selectedEntitiesforDocument = [];
+			//this.selectedEntitiesforDocument.push(item);
+			
 		},
 		updateTitle(message) {
 			this.insightTitle = message;
@@ -654,6 +684,15 @@ export default {
 				}
 			});
 		},
+		resetHeight(index) {
+		//	debugger;
+if (index === 0) {
+	this.activityPanelHeight = 380;
+} else {
+	this.activityPanelHeight = 700;
+}
+		}
+		
 	},
 };
 </script>
@@ -664,6 +703,7 @@ export default {
 	background-color: #fafafa;
 	margin-top: 11px;
 	overflow: hidden;
+	
 }
 .filter {
 	display: flex;
@@ -748,15 +788,15 @@ flex: 1 0 10% ;
 	color: #828288;
 	left: 0;
 	position: absolute;
-	margin-left: 45px;
+	margin-left: 35px;
 	font-size: 14px;
-	margin-top: 1.5px;
+	margin-top: 3px;
 }
 .menutexttotal {
 	color: #828288;
 	left: 0;
 	position: fixed;
-	margin-left: 52px;
+	margin-left: 65px;
 	font-size: 14px;
 	margin-top: 0px;
 }
@@ -782,6 +822,22 @@ flex: 1 0 10% ;
 }
 .pagemargin {
 	margin-left: 20px;
+}
+.cardtitle {
+align-items: center;
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+    display: flex;
+    font-size: 0.9375rem;
+    line-height: 1;
+    min-height: 64px;
+    outline: none;
+    padding: 16px 24px;
+    position: relative;
+    transition: 0.3s min-height cubic-bezier(0.25, 0.8, 0.5, 1);
+    width: 100%;
+text-align:left;
+
 }
 
 >>>.v-expansion-panel::before {

@@ -45,30 +45,91 @@
       </v-card>
       <v-card
         class="d-flex align-self-center newteam"
-        style="margin-top: 15px"
+        style="margin-top: 15px;width:180px"
         text
         tile
       >
         <v-dialog v-model="dialog" persistent max-width="500">
           <template v-slot:activator="{ on, attrs }">
+           
             <v-btn
               color="#144584"
               class="white--text"
-              width="218px"
+              width="180px"
               height="40px"
               style="font-size: 12px"
               v-bind="attrs"
               v-on="on"
               :retain-focus-on-click="true"
             >
-              Create new team
-              <v-img
-                height="40"
-                width="20"
+             
+              Teams
+              <v-img     
+              small
+              max-height="60"
+              contain        
+                style="margin-left:-50px"
                 :src="require('@/assets/icons/+-1.png')"
-                class="img-buttons mt-2 ml-30"
-              />
+                class="img-buttons mt-2"
+                >
+              </v-img>
             </v-btn>
+             <v-dialog v-model="showInvite" max-width="500">
+            <template v-slot:activator="{ on, attrs }">
+              <!-- <v-avatar size="20" color="red"> -->
+                <v-btn v-bind="attrs" v-on="on" color="transparent" text>
+              <v-icon size="32" style="margin-left:-22px"   color="#144584" 
+              >mdi-account-multiple-plus</v-icon>
+                </v-btn>
+              <!-- </v-avatar> -->
+            </template>
+            <v-card>
+              <v-card-title>Invite People</v-card-title>
+              <v-card-text class="ma-0 pa-0" style="background-color:#FAFAFA">
+                <v-col
+                    cols="12"
+                    sm="12"
+                    md="12"
+                    style="padding-bottom:0;margin-bottom:0"
+                  >
+              <v-textarea
+              outlined              
+              rows="5"
+              label="Enter the comma separated invitees email"
+              v-model="inviteesEmail"              
+            ></v-textarea>
+                  </v-col>
+                   <v-col
+                    style="padding-top:0;margin-top:0"
+                    cols="12"
+                    sm="12"
+                    md="12"
+                  >
+             <v-select
+             dense outlined label="Role" placeholder="Select Role"
+              :items="inviteRoles" item-text="value" item-value="id" v-model="inviteRole" />
+                  </v-col>
+              </v-card-text>
+              <v-card-actions>
+              <v-spacer></v-spacer>
+          
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="showInvite = false"
+          >
+            Cancel
+          </v-btn>
+           <v-btn
+            color="blue darken-1"
+            text
+           
+          >
+            Invite
+          </v-btn>
+              </v-card-actions>
+            </v-card>
+             </v-dialog>
           </template>
           <v-card>
             <v-card-title>Teams</v-card-title>
@@ -89,7 +150,7 @@
                       multiple
                       return-object
                       v-model="selectedUsersAddtoTeam"
-                      :key="selectedUsersAddtoTeam"
+                      :key="String(selectedUsersAddtoTeam)"
                       :items="allUsers"
                       item-text="Name"
                       placeholder="Select Users.."></v-autocomplete>
@@ -116,7 +177,7 @@
                   multiple
                   return-object
                   v-model="selectedUsersAddtoTeam"
-                  :key="selectedUsersAddtoTeam"
+                  :key="String(selectedUsersAddtoTeam)"
                   :items="allUsers"
                   item-text="Name"
                   placeholder="Select users"
@@ -283,6 +344,10 @@ export default {
       teams: [],
       selectedUsersAddtoTeam:[],
       dialog: false,
+      showInvite:false,
+      inviteesEmail: null,
+      inviteRoles: [{"id":1,"value":"Manager"},{"id":2,"value":"Employee"}],
+      inviteRole:null,
       selectedMode: "activity",
       selectedUsers: [],
       allUsers: [],
@@ -320,10 +385,10 @@ export default {
   },
   watch: {
     selectedUsers:function(){
-      console.log('entities:',this.userids)
+     // console.log('entities:',this.userids)
     },
     selectedTeams:function(){
-      console.log(this.selectedTeams)
+     // console.log(this.selectedTeams)
     },
     selectedItems:function(){
       localStorage.setItem("selectedItems",JSON.stringify(this.selectedItems));
@@ -428,10 +493,10 @@ export default {
         this.addSelectedTeamNames();
       }
       var itemids = this.selectedItems.map((item)=> {return item.UserID})
-      console.log('item',itemids)
-      console.log(this.selectedItems[0])
-      console.log(this.selectedTeams[0])
-      console.log(this.selectedUsersforManager[0])
+      // console.log('item',itemids)
+      // console.log(this.selectedItems[0])
+      // console.log(this.selectedTeams[0])
+      // console.log(this.selectedUsersforManager[0])
     },
     addSelectedTeamNames() {
       this.selectedTeamNames = "";
@@ -482,7 +547,7 @@ export default {
       });
       var post_data = {};
       if(choice==0) { 
-        console.log('create',arr)
+        //console.log('create',arr)
         if (this.newTeamName.length != 0) {
           post_data["teamname"] = this.newTeamName;
           post_data["isNew"] = 1;
@@ -492,7 +557,7 @@ export default {
         }
       }
       else if(choice==1){ 
-        console.log('add new member(s)',arr)
+        //console.log('add new member(s)',arr)
         post_data["teamID"] = this.toaddteam;
         post_data["isNew"] = 0; 
       }
@@ -505,7 +570,7 @@ export default {
         );
         if (res.data.status === "ok") {
           this.dialog = false;
-          this.selectedUsers = [];
+        //  this.selectedUsers = [];
          // this.getTeams();
           this.getUsersandTeams();
         }
@@ -604,8 +669,13 @@ export default {
           managerID: localStorage.getItem('userid'),
         });
         if (res.status == 200) {
+        //  debugger;
+//           if (teamAdded) {
+// this.entities.push(res.data.result[res.data.result -1]);
+//           } else {
           this.entities = res.data.result;
-          console.log(this.entities.length);
+          //}
+         // console.log(this.entities.length);
         }
       } catch (e) {}
     },
@@ -626,7 +696,7 @@ export default {
     },
 
     isSelected(user) {
-      console.log(this.selectedUser.includes(user));
+     // console.log(this.selectedUser.includes(user));
       return true;
     },
     updateUserColorinTeam(user) {
@@ -738,7 +808,7 @@ this.selectedTeams.forEach(team => {//debugger;
   left: 28px;
 }
 .newteam {
-  width: 218px !important;
+  width: 218px ;
   height: 40px;
   left: 30px !important;
   font-family: Open Sans;

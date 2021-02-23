@@ -79,7 +79,7 @@ export default {
           },
         },
         noData: {
-          text: "Loading...",
+          text: 'No entity selected',
         },
         yaxis: {
           min: 0,
@@ -197,9 +197,10 @@ props: ['selectedEntities','dateRange','timeMode','selectedApps','graphMode'],
                   ''
                 );
     if (!payload.userIDs.length && !payload.teamIDs.length) {
-     // this.insightNumber = 0;
-      return;
-    }
+     this.insightOptionsCommon = {...this.insightOptionsCommon, noData:{text:'No entity selected'}};
+        return;
+      }
+      this.insightOptionsCommon = {...this.insightOptionsCommon, noData:{text:'Loading...'}};
       try {
        // this.insightNumber = 0;        
         var res = await this.$apiService.post("/analytics/linegraphs", payload);

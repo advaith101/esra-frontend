@@ -64,7 +64,7 @@ export default {
           // },
         },
         noData: {
-          text: "Loading...",
+          text: 'No entity selected',
         },
         plotOptions: {
           radar: {
@@ -198,8 +198,10 @@ export default {
       this.radarChartSeries = [];
       if (!payload.userIDs.length && !payload.teamIDs.length) {
         //this.insightNumber = 0;
+       this.radarOptions = {...this.radarOptions, noData:{text:'No entity selected'}};
         return;
       }
+      this.radarOptions = {...this.radarOptions, noData:{text:'Loading...'}};
       try {
         var res = await this.$apiService.post("/users/spiderchart", payload);
         if (res) {

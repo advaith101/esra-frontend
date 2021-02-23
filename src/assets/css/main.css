@@ -2,8 +2,7 @@
     padding: 0px!important;          
     overflow: hidden;    
     border-left-color: transparent!important;
-    background-color:#FAFAFA!important;
-    
+    background-color:#FAFAFA!important;    
 }
 .md-app .md-content.md-theme-default .md-app-drawer{
     border-left-color: none!important;
@@ -23,3 +22,9 @@
     background: transparent!important;
     cursor:pointer;    
 }
+
+/* .v-icon:not(.v-icon--text):not(.v-icon--outlined):hover:after {
+  opacity: 0!important;
+} */
+
+

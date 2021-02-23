@@ -1,5 +1,5 @@
 <template>
-  <div style="height:350px">
+  <div >
     <!-- <v-carousel cycle hide-delimiter-background :show-arrows=false vertical vertical-delimiters="true">
         <v-carousel-item
           v-for="(i) in 2"
@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       reqPayload: {},
-      chartData: {},
+      docChartData: {},
       series: [],
       docInsightNumber: 0,
       docInsightChartSeries: [],
@@ -84,7 +84,7 @@ export default {
         },
        // colors: [ '#5F4B66','#A7ADC6','#8797AF'],        
         noData: {
-          text: "Loading...",
+          text: 'No entity selected',
         },
         yaxis: {
           // min: 10,
@@ -182,22 +182,22 @@ insightType = focusEntity.type;
       
       return this.reqPayload;
     },
-    async getDocInsightChartData() {
+    async getDocInsightChartData() {      
      var payload = this.getRequestPayload();
       this.docInsightChartSeries = [];
             this.docInsightOptions = {};
     this.docInsightNumber = 0;
     if (!payload.userIDs.length && !payload.teamIDs.length && !payload.focusEntity.length) {
-     // this.insightNumber = 0;
-      return;
-    }
+     this.docInsightOptionsCommon = {...this.docInsightOptionsCommon, noData:{text:'No entity selected'}};
+        return;
+      }
+      this.docInsightOptionsCommon = {...this.docInsightOptionsCommon, noData:{text:'Loading...'}};
       try {
         var res = await this.$apiService.post("/analytics/docInsights", payload);
-        if (res) {
-          try {
-            this.chartData = res.data;
-            this.docInsightNumber =  this.chartData.numInsights;
-           
+        if (res && res.data) {
+          try {           
+            this.docChartData = res.data;            
+            this.docInsightNumber =  this.docChartData.numInsights;           
          //   this.$nextTick(() => {
               for (
                 var docInsightCount = 0;
@@ -217,7 +217,7 @@ insightType = focusEntity.type;
                   3;
                   seriesCount++
                 ) {
-                var barData = this.chartData["insight" + docInsightCount][
+                var barData = this.docChartData["insight" + docInsightCount][
                       "bar" + seriesCount];
                 if (seriesCount === 0) {
                 data.push({name:'Time',data:[parseFloat(barData.scaledTime).toFixed(2)]}); 
@@ -242,7 +242,7 @@ highestPlotValue.push(parseFloat(barData[keysSorted[0]]).toFixed(2));
           //             "bar" + seriesCount]].reduce((acc, { scaledTime,scaledActivity,scaledSize }) => [ ...acc, scaledTime,scaledActivity,scaledSize], []);
                  // this.docInsightChartSeries[docInsightCount].series.data=[400, 430]
                   categories.push(
-                    this.chartData["insight" + docInsightCount][
+                    this.docChartData["insight" + docInsightCount][
                       "bar" + seriesCount].name
                    
                   );
@@ -272,13 +272,13 @@ highestPlotValue.push(parseFloat(barData[keysSorted[0]]).toFixed(2));
                             // }
                             var self = this;
                             if(opt.seriesIndex==0){
-                              return self.chartData["insight0"]["bar" + opt.dataPointIndex].rawTime;
+                              return self.docChartData["insight0"]["bar" + opt.dataPointIndex].rawTime;
                             }
                             else if(opt.seriesIndex==1){
                               return val;
                             }
                             else if(opt.seriesIndex==2){
-                              return self.chartData["insight0"]["bar" + opt.dataPointIndex].scaledActivity+ 'Mb/hr';
+                              return self.docChartData["insight0"]["bar" + opt.dataPointIndex].scaledActivity+ 'Mb/hr';
                             }
                             return val;
                             }
@@ -312,7 +312,7 @@ highestPlotValue.push(parseFloat(barData[keysSorted[0]]).toFixed(2));
         }
       } catch (error) {
         console.log(error);
-      // alert(error)
+       alert(error)
       }
     },
   },

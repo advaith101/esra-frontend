@@ -7,9 +7,18 @@
           
           reverse-transition="fade-transition"
           transition="fade-transition"
-        > -->
-    <VueSlickCarousel :arrows="true" ref="carousel" :dots="true" @afterChange="reloadTitle" v-if="comparisonBarNumber > 0">
-      <div v-for="i in comparisonBarNumber" :key="i">
+  v-if="comparisonBarNumber > 0"  > -->
+    <VueSlickCarousel style="height:180px" :arrows="true" ref="carousel" :dots="true" @afterChange="reloadTitle" v-if="comparisonBarNumber > 0">
+      <div v-if="docInsightCount === 1">
+      <DocInsightChart
+														ref="documentChart"
+														:selectedEntities="selectedEntities"
+														:dateRange="dateRange"
+														:timeMode="timeMode"
+														:selectedApps="selectedApps"
+													/>
+      </div>                  
+      <div v-for="i in comparisonBarNumber" :key="i" >
         <apexchart
           type="bar"
           height="140"
@@ -41,7 +50,7 @@
 
 <script>
 import moment from "moment";
-// import DocInsightChart from "./DocInsightChart";
+ import DocInsightChart from "./DocInsightChart";
 import VueSlickCarousel from "vue-slick-carousel";
 import "vue-slick-carousel/dist/vue-slick-carousel.css";
 // optional style for arrows & dots
@@ -51,13 +60,15 @@ export default {
     this.series.push({name:"", data:[]});
   },
   components: {
-    VueSlickCarousel
+    VueSlickCarousel,
+    DocInsightChart
   },
   data() {
     return {
       reqPayload: {},
       chartData: {},
       series: [],
+      docInsightCount:0,
       comparisonBarNumber: 0,
       comparisonBarChartSeries: [],
       comparisonBarOptions: [],
@@ -101,7 +112,7 @@ export default {
         },
        // colors: [ "#3BB08D","#4CB3D2"],        
         noData: {
-          text: "Loading...",
+          text: 'No entity selected',
         },
         yaxis: {
           // min: 10,
@@ -129,11 +140,16 @@ export default {
       },
     };
   },
+  // computed:{
+  //   docInsightCount() {      
+  //     return this.selectedEntities.length;
+  //   }
+  // },
 props: ['selectedEntities','dateRange','timeMode','selectedApps'],
  mounted() {
     this.$watch(vm => [vm.selectedEntities, vm.dateRange,vm.timeMode,vm.selectedApps], val => {
-      
-    this.getcomparisonBarChartData();      
+   //   this.docInsightCount = this.selectedEntities.length;
+    this.getcomparisonBarChartData();         
     }, {
       immediate: true, // run immediately
       deep: true 
@@ -170,31 +186,44 @@ props: ['selectedEntities','dateRange','timeMode','selectedApps'],
       self.$refs.carousel.goTo(1);
     },
     reloadTitle(newSlideIndex) {
+      if (newSlideIndex === 0 && this.docInsightCount === 1) {
+ this.$emit(
+                  "updateComparisonBarChartTitle","Project Insights");
+      } else {
+        if (this.docInsightCount === 1){
+          newSlideIndex = newSlideIndex - 1;
+        }
        this.$emit(
                   "updateComparisonBarChartTitle",
                   this.chartData["insight"+newSlideIndex].verbalInsight
                 );
+      }
     },
     async getcomparisonBarChartData() {
      var payload = this.getRequestPayload();
+        //this.docInsightCount = this.selectedEntities.filter(x => x.isSelected).length;
+     //   alert(this.docInsightCount);
      this.comparisonBarChartSeries=[];
 this.comparisonBarOptions = [];
     this.comparisonBarNumber = 0;
     this.$emit( "updateComparisonBarChartTitle", "");
     if (!payload.userIDs.length && !payload.teamIDs.length) {
      // this.insightNumber = 0;
-      return;
-    }
+     this.comparisonBarOptionsCommon = {...this.comparisonBarOptionsCommon, noData:{text:'No entity selected'}};
+        return;
+      }
+      this.comparisonBarOptionsCommon = {...this.comparisonBarOptionsCommon, noData:{text:'Loading...'}};
       try {
         var res = await this.$apiService.post("/analytics/bargraphs",payload);
         if (res) {
           try {
             this.chartData = res.data;
+            //console.log(this.chartData)
             this.comparisonBarNumber =  this.chartData.numInsights;
           // this.resetCarousel();            
  this.comparisonBarChartSeries=[];
 this.comparisonBarOptions = [];
- 
+  this.docInsightCount = this.selectedEntities.filter(x => x.isSelected).length;
          //   this.$nextTick(() => {
               for (
                 var comparisonBarCount = 0;
@@ -206,7 +235,10 @@ this.comparisonBarOptions = [];
                // this.comparisonBarChartSeries.push();
                 this.comparisonBarChartSeries.push([]);
               //  this.comparisonBarChartSeries[comparisonBarCount] = {series:{data:[]}};
-                if (this.chartData["insight" + comparisonBarCount].verbalInsight !== "") {
+              if (this.docInsightCount === 1) {
+                this.$emit(
+                  "updateComparisonBarChartTitle","Project Insights");
+              } else if (this.chartData["insight" + comparisonBarCount].verbalInsight !== "") {
                 this.$emit(
                   "updateComparisonBarChartTitle",
                   this.chartData["insight0"].verbalInsight

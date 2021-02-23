@@ -2,8 +2,9 @@
 <div class="header pa-0 ma-0">
 <div >
   <v-col cols="12">
-      <v-row>
-          <v-flex lg9>
+      <v-row >
+          <v-flex lg9 >
+              
             <!-- <v-text-field
                         class="searchbar"            
                        dense
@@ -18,8 +19,9 @@
             >Tempo
             <pre class="subTitle"> Esra Systems, LLC </pre></span
           > 
+              
           </v-flex>
-          <v-flex lg2>
+          <v-flex lg2 >
                <v-row >
                     <v-img max-height="30" max-width="30" :src="require('@/assets/icons/share.png')" class="img-buttons" />
                     <v-img max-height="30" max-width="30" :src="require('@/assets/icons/print.png')" class="img-buttons" />
@@ -124,10 +126,10 @@ export default {
 
 <style scoped>
 .header {
-box-shadow: 0px 4px 32px rgba(0, 49, 104, 0.05);
+/* box-shadow: 0px 4px 32px rgba(0, 49, 104, 0.05); */
 height: 78px;
 width: 100%!important;
-background-color: #FAFAFA;
+background-color: #FAFAFA!important;
 
 }
 
