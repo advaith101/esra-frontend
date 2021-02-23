@@ -221,7 +221,7 @@
 											<v-expansion-panel style="height:260px"> 
 												<v-expansion-panel-header class="paneltitle" expand-icon=""-->
 													<v-card class="panelborder elevation-0" style="height:265px">
-														<v-card-title hide-actions class="paneltitle cardtitle" style="min-height:62px;margin-right:10px;white-space:pre-wrap"
+														<v-card-title  class="paneltitle cardtitle" style="min-height:62px;margin-right:10px;"
 													>{{ comparisonChartTitle }}
 													<div style="right:0;position:absolute;height:50px">
 													<v-menu >
@@ -824,20 +824,21 @@ flex: 1 0 10% ;
 	margin-left: 20px;
 }
 .cardtitle {
-align-items: center;
+/* align-items: center;
     border-top-left-radius: inherit;
     border-top-right-radius: inherit;
-    display: flex;
+    display: flex; */
     font-size: 0.9375rem;
     line-height: 1;
     min-height: 64px;
-    outline: none;
+    /* outline: none;
     padding: 16px 24px;
     position: relative;
-    transition: 0.3s min-height cubic-bezier(0.25, 0.8, 0.5, 1);
+    transition: 0.3s min-height cubic-bezier(0.25, 0.8, 0.5, 1); */
     width: 100%;
 text-align:left;
-
+white-space: pre-wrap !important;
+word-break: keep-all !important;
 }
 
 >>>.v-expansion-panel::before {

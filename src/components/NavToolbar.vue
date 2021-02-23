@@ -1,9 +1,9 @@
 <template>
-<div class="header pa-0 ma-0">
-<div >
-  <v-col cols="12">
-      <v-row >
-          <v-flex lg9 >
+<!-- <div class="header pa-0 ma-0"> -->
+<!-- <div > -->
+  <v-col cols="12" class="pa-0">
+      <v-row style="margin-bottom:5px">
+          <v-flex lg9 xs12 sm7 >
               
             <!-- <v-text-field
                         class="searchbar"            
@@ -15,14 +15,18 @@
                 >
                 <v-img slot="prepend-inner" class='search-icon' :src="require('@/assets/icons/search.png')"></v-img>
             </v-text-field> -->
-            <span class="title" @click="$router.push('/home')"
+            <!-- <span class="title" @click="$router.push('/home')"
             >Tempo
             <pre class="subTitle"> Esra Systems, LLC </pre></span
-          > 
+          >  -->
+          <div style="text-align:middle" class="title">
+           <img  width="150px"  :style="$vuetify.breakpoint.xsOnly ? 'margin-top:-4px':'margin-top:-5px'" :src="require('@/assets/logo.png')"/>
+          </div>
               
           </v-flex>
-          <v-flex lg2 >
+          <v-flex lg2 sm2 >
                <v-row >
+                   <v-spacer v-if="$vuetify.breakpoint.xsOnly"></v-spacer>
                     <v-img max-height="30" max-width="30" :src="require('@/assets/icons/share.png')" class="img-buttons" />
                     <v-img max-height="30" max-width="30" :src="require('@/assets/icons/print.png')" class="img-buttons" />
                     <v-badge color="indigo" overlap :content="isNotif" :value="isNotif" offset-x="10" offset-y="17">
@@ -31,12 +35,12 @@
                     </v-badge>
                </v-row>
           </v-flex>
-            <v-flex lg1 v-show="!$vuetify.breakpoint.xsOnly" >
+            <v-flex lg1 sm2 v-show="!$vuetify.breakpoint.xsOnly" :style="$vuetify.breakpoint.mdOnly && 'margin-left:40px'" >
               <v-row >                   
                 <v-menu nudge-bottom=55>
                     <template v-slot:activator="{ on }">
                         <v-btn icon v-on="on">
-                            <v-avatar style="margin-right:10px;top:7px">          
+                            <v-avatar style="margin-right:10px;top:9px">          
                                 <img src="https://randomuser.me/api/portraits/women/81.jpg">           
                             </v-avatar>
                         </v-btn>
@@ -76,8 +80,8 @@
         </v-flex>
         </v-row>
     </v-col>
-    </div>
-</div>
+    <!-- </div> -->
+<!-- </div> -->
 </template>
 
 <script>
@@ -153,6 +157,59 @@ border-radius: 4px;
     margin-left:-5px;
     margin-top:-3px;
 }
+
+.v-btn {
+    width:32px;
+    height:32px;
+    color:red;
+}
+
+.img-buttons {
+    cursor: pointer;
+    vertical-align: middle;
+    top: 6.5px;
+    margin-left: 10px;
+}
+.myaccount {   
+display: flex;
+flex-direction: row;
+justify-content: flex-start;
+top: 80px;
+font-size: 8px;
+position: absolute;
+width: 250px;
+}
+
+.title {
+  left: 30px;
+  
+  /* top: 30px; */
+  /* bottom: 28px; */
+  font-family: Righteous;
+  font-style: normal;
+  font-weight: bolder;
+  font-size: 30px;
+  /* line-height: 37px; */
+  color: #144584;
+}
+.subTitle {
+  top: 29px;
+  bottom: 14px;
+  font-family: Righteous;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 15px;
+  color: #c0cbe4;
+}  
+.logo {
+    
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
 .namediv {
    margin-top: 5%;
    margin-left: 15px;     
@@ -172,27 +229,6 @@ font-size: 12px;
 color: #6B6B81;
 
 }
-.v-btn {
-    width:32px;
-    height:32px;
-    color:red;
-}
-
-.img-buttons {
-    cursor: pointer;
-    vertical-align: middle;
-    top: 9.5px;
-    margin-left: 10px;
-}
-.myaccount {   
-display: flex;
-flex-direction: row;
-justify-content: flex-start;
-top: 80px;
-font-size: 8px;
-position: absolute;
-width: 250px;
-}
 .button-sect {
     display: flex;
     flex-direction: row;
@@ -206,25 +242,4 @@ width: 250px;
     padding: 0px 25px;
     margin-right: 10px;
   }
-.title {
-  left: 30px;
-  top: 13px;
-  bottom: 28px;
-  font-family: Righteous;
-  font-style: normal;
-  font-weight: bolder;
-  font-size: 30px;
-  line-height: 37px;
-  color: #144584;
-}
-.subTitle {
-  top: 29px;
-  bottom: 14px;
-  font-family: Righteous;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  line-height: 15px;
-  color: #c0cbe4;
-}  
 </style>

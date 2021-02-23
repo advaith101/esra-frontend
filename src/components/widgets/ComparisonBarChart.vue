@@ -8,7 +8,7 @@
           reverse-transition="fade-transition"
           transition="fade-transition"
   v-if="comparisonBarNumber > 0"  > -->
-    <VueSlickCarousel style="height:180px" :arrows="true" ref="carousel" :dots="true" @afterChange="reloadTitle" v-if="comparisonBarNumber > 0">
+    <VueSlickCarousel style="height:170px" :arrows="true" ref="carousel" :dots="true" @afterChange="reloadTitle" v-if="comparisonBarNumber > 0">
       <div v-if="docInsightCount === 1">
       <DocInsightChart
 														ref="documentChart"

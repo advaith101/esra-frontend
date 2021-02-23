@@ -2,22 +2,76 @@
   <div class="page-container">
     <md-app md-waterfall md-mode="fixed">
       <md-app-toolbar style="background-color:#FAFAFA">
+         <v-col cols="12">
+      <v-row >
+        <v-flex xs1 lg0 md0 sm0>
         <md-button class="md-icon-button hidden-md-and-up" @click="menuVisible = !menuVisible">
           <v-icon style="color:black">mdi-menu</v-icon>
         </md-button>
+        </v-flex>
+        <v-flex xs10 lg12 md12 sm12>
         <NavToolbar v-on:notif-toggle="notifToggle" v-on:search-item="updateSearchString" :isNotif="isNotif" />
-        
+        </v-flex>
+      </v-row>
+         </v-col>
       </md-app-toolbar>
       <md-app-drawer
       :md-active.sync="menuVisible"
         md-permanent="full"
-        style="width:278px;background-color:#FAFAFA;"
+        style="width:278px;background-color:#FAFAFA;"        
       >
         <md-app-toolbar style="background-color:#FAFAFA;height:78px;cursor:pointer" >
           <!-- <span class="title" @click="$router.push('/home')"
             >Tempo
             <pre class="subTitle"> Esra Systems, LLC </pre></span
           > -->
+          <v-col cols="12">
+      <v-row >
+           <v-flex xs12 v-show="$vuetify.breakpoint.xsOnly" >
+          <v-row class="ma-2">
+           <v-menu nudge-bottom=55>
+                    <template v-slot:activator="{ on }">
+                        <v-btn icon v-on="on">
+                            <v-avatar style="margin-left:0px;top:7px">          
+                                <img src="https://randomuser.me/api/portraits/women/81.jpg">           
+                            </v-avatar>
+                        </v-btn>
+                    </template>
+                    <v-card width="250px" height="120px" >                       
+                        <v-card-actions>
+                            <v-avatar style="margin-left:0px;top:7px">          
+                                <img src="https://randomuser.me/api/portraits/women/81.jpg">           
+                            </v-avatar>
+                           <div class="d-flex flex-column namediv ">
+                            <span class="name align-self-center mr-auto">{{ userName}} </span>
+                            <span class="nametitle">{{ userRole}}</span>
+                            <div class="myaccount">
+                                <v-row class="row1">
+                                    <div class="button-sect">
+                                        <v-btn class="text-caption button white--text" color="#144584" @click="gotoprofile()" small dark>My Account</v-btn>
+                                            <v-btn
+                                                class="button btnCancel"
+                                                color="#144584"
+                                                outlined
+                                                small
+                                                @click="signOut()"
+                                                >Logout</v-btn
+                                            >
+                                    </div>
+                                </v-row>
+                            </div>
+                          </div>
+                        </v-card-actions>
+                    </v-card>
+                </v-menu>
+                <div class="d-flex flex-column namediv ">
+                    <span class="name align-self-center mr-auto">{{ userName }} </span>
+                    <span class="nametitle">Manager</span>
+                </div>
+          </v-row>
+           </v-flex>
+      </v-row>
+          </v-col>
         </md-app-toolbar>
 
         <Sidebar v-on:mode-change="modeUpdate" :timeMode="timeMode" :dateRange="dateRange"  :searchString="searchString" />
@@ -87,7 +141,9 @@ export default {
       notifications:[],
       menuVisible: false,
       timeMode:3,
-      dateRange:null
+      dateRange:null,
+       userName: localStorage.getItem("userName"),
+            userRole: localStorage.getItem("userEmail")
     }
   },
   
@@ -115,7 +171,17 @@ export default {
     },
     dateRangeChanged(value) {
       this.dateRange = value;
-    }
+    },
+     gotoprofile:function() {
+            this.$router.push({ name: 'profile' })
+        },
+        signOut() {
+             localStorage.removeItem('token');
+                    localStorage.removeItem('refreshtoken');
+                    localStorage.removeItem('userName');
+                    localStorage.removeItem('userEmail');
+                    this.$router.push('/');
+        }
   }
 }
 </script>
@@ -160,6 +226,49 @@ export default {
 }
 .overlay-card{
   width:80%;
+}
+.namediv {
+   margin-top: 5%;
+   margin-left: 15px;     
+}
+.name {
+    font-family: Open Sans;
+font-style: normal;
+font-weight: bold;
+font-size: 14px;
+align-self: center;
+color: #202031;
+}
+.nametitle {
+    font-family: Open Sans;
+font-style: normal;
+font-size: 12px;
+color: #6B6B81;
+
+}
+.button-sect {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: -10px;
+    margin-left: -30px;
+    
+  }
+
+  .button {
+    width: 100px;
+    padding: 0px 25px;
+    margin-right: 10px;
+    
+  }
+  .myaccount {   
+display: flex;
+flex-direction: row;
+justify-content: flex-start;
+top: 80px;
+font-size: 8px;
+position: absolute;
+width: 250px;
 }
 @media (min-width: 1400px) {
   .overlay-card{

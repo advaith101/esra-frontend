@@ -5,7 +5,7 @@
         <v-row align="center" justify="center">
           <v-col cols="12" sm="8" md="4">     
 
-        <v-img class="logo" width="174px" height="81px" :src="require('@/assets/logo.png')"></v-img>
+        <v-img class="logo" width="280px" height="81px" :src="require('@/assets/logo.png')"></v-img>
         <v-card elevation="0"   height="284px" style="margin-top:15px">
             <!-- <h3>Login</h3> -->
             <v-form ref="form"  >
@@ -91,7 +91,7 @@ export default {
 }
 
 .logo {
-    margin-left: 24%;
+    margin-left: 8%;
 }
 
 .child {

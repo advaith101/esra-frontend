@@ -3,10 +3,10 @@
     <div>
       <v-col cols="12">
         <v-row style="margin-top: -5px">
-          <v-flex lg4>
+          <v-flex lg4 xs8 >
             <span class="emptitle">Employees</span>
           </v-flex>
-          <v-flex lg6 class="d-flex">
+          <v-flex lg6 xs9 class="d-flex">
             <v-select
               :items="mode"
               item-text="title"
@@ -45,7 +45,7 @@
       </v-card>
       <v-card
         class="d-flex align-self-center newteam"
-        style="margin-top: 15px;width:180px"
+        style="margin-top: 15px;width:130px"
         text
         tile
       >
@@ -55,30 +55,25 @@
             <v-btn
               color="#144584"
               class="white--text"
-              width="180px"
+              width="130px"
               height="40px"
-              style="font-size: 12px"
+              style="font-size: 12px;text-align:center"
               v-bind="attrs"
               v-on="on"
               :retain-focus-on-click="true"
             >
              
               Teams
-              <v-img     
-              small
-              max-height="60"
-              contain        
-                style="margin-left:-50px"
-                :src="require('@/assets/icons/+-1.png')"
-                class="img-buttons mt-2"
-                >
-              </v-img>
+              <v-icon right
+              
+                >mdi-plus-circle
+              </v-icon>
             </v-btn>
              <v-dialog v-model="showInvite" max-width="500">
             <template v-slot:activator="{ on, attrs }">
               <!-- <v-avatar size="20" color="red"> -->
-                <v-btn v-bind="attrs" v-on="on" color="transparent" text>
-              <v-icon size="32" style="margin-left:-22px"   color="#144584" 
+                <v-btn v-bind="attrs" v-on="on" color="transparent" text style="width:120px">
+              <v-icon size="32"  right  color="#144584" 
               >mdi-account-multiple-plus</v-icon>
                 </v-btn>
               <!-- </v-avatar> -->
@@ -123,7 +118,7 @@
            <v-btn
             color="blue darken-1"
             text
-           
+           @click="sendInvite"
           >
             Invite
           </v-btn>
@@ -766,6 +761,16 @@ this.selectedTeams.forEach(team => {//debugger;
       store.color = value.color;
       this.$store.commit("changeSelected", store);
     },
+    async sendInvite() {
+ var res = await this.$apiService.post("common/emailInvite", {
+          emailIDs: [this.inviteesEmail],
+          roleID: this.inviteRole          
+        });
+        if (res.status === 200) {
+          this.showSuccess("Invite(s) sent successfully");
+          this.showInvite = false;
+        }
+    }
   },
 };
 </script>
@@ -817,6 +822,7 @@ this.selectedTeams.forEach(team => {//debugger;
   line-height: 19px;
   color: #b2b2bf;
   margin-top: -25px;
+  text-align: center;
 }
 
 .select-bg {
