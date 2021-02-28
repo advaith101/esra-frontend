@@ -13,10 +13,12 @@ import store from "./store";
 import httpservice from "./service/httpservice";
 import VueSimpleAlert from "vue-simple-alert";
 import {mixin} from './service/mixin';
+import OtpInput from "@bachdgvn/vue-otp-input";
 
 Vue.config.productionTip = false
 Vue.use(VueMaterial);
 Vue.use(VueSimpleAlert);
+Vue.component("v-otp-input", OtpInput);
 Vue.mixin(mixin);
 Vue.filter('formatDate', function(value) {
   if (value) {

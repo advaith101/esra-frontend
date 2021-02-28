@@ -23,10 +23,12 @@
                     label="Password"
                     outlined
                     dense
-                    :rules="pwdRules"
-                    :type="'password'"
+                    :rules="pwdRules"                    
                     required
                     v-on:keyup.enter="validate"
+                    :append-icon="hidePassword ? 'mdi-eye-off' : 'mdi-eye'"
+    @click:append="() => (hidePassword = !hidePassword)"
+    :type="hidePassword ? 'password' : 'text'" 
                  ></v-text-field>
                  <div style="margin-top:-15px">
                  <span class="forgotpassword" style="cursor:pointer">Forgot Password?</span>
@@ -48,6 +50,7 @@ export default {
     data() {
         return{
             userName:'',
+            hidePassword:true,
             userRules:[
                 v => !!v || 'Name is required'
             ],
