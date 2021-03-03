@@ -307,12 +307,12 @@ highestPlotValue.push(parseFloat(barData[keysSorted[0]]).toFixed(2));
               
           //  });
           } catch (error) {
-              alert(error);
+             // alert(error);
           }
         }
       } catch (error) {
         console.log(error);
-       alert(error)
+      // alert(error)
       }
     },
   },

@@ -104,7 +104,7 @@ export default {
         .filter((x) => x.type === "user" && x.isSelected)
         .map((y) => y.id);
       var post_data = {
-        managerID: localStorage.getItem("userid"),
+        managerID: this.getUserDetails().UserID,
         teamIDs: teamIDs,
         userIDs: userIDs,
         timeMode: this.timeMode,

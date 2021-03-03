@@ -14,7 +14,10 @@ const Toast = Swal.mixin({
 
 var myMixin = {
  
-    methods: {     
+    methods: {  
+      getUserDetails(){        
+        return this.$store.state.userDetails;
+      },   
     showSuccess(msg){
       Toast.fire({
         icon: 'success',

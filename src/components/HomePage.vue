@@ -1,15 +1,15 @@
 <template>
   <div class="page-container">
     <md-app md-waterfall md-mode="fixed">
-      <md-app-toolbar style="background-color:#FAFAFA">
-         <v-col cols="12">
+      <md-app-toolbar style="background-color:#FAFAFA" >
+         <v-col cols="12" class="pa-0 ma-0">
       <v-row >
         <v-flex xs1 lg0 md0 sm0>
         <md-button class="md-icon-button hidden-md-and-up" @click="menuVisible = !menuVisible">
           <v-icon style="color:black">mdi-menu</v-icon>
         </md-button>
         </v-flex>
-        <v-flex xs10 lg12 md12 sm12>
+        <v-flex xs10 lg12 md12 sm12>          
         <NavToolbar v-on:notif-toggle="notifToggle" v-on:search-item="updateSearchString" :isNotif="isNotif" />
         </v-flex>
       </v-row>
@@ -20,7 +20,7 @@
         md-permanent="full"
         style="width:278px;background-color:#FAFAFA;"        
       >
-        <md-app-toolbar style="background-color:#FAFAFA;height:78px;cursor:pointer" >
+        <md-app-toolbar style="background-color:#FAFAFA;height:65px;cursor:pointer" >
           <!-- <span class="title" @click="$router.push('/home')"
             >Tempo
             <pre class="subTitle"> Esra Systems, LLC </pre></span
@@ -44,7 +44,7 @@
                             </v-avatar>
                            <div class="d-flex flex-column namediv ">
                             <span class="name align-self-center mr-auto">{{ userName}} </span>
-                            <span class="nametitle">{{ userRole}}</span>
+                            <span class="nametitle">{{ userEmail}}</span>
                             <div class="myaccount">
                                 <v-row class="row1">
                                     <div class="button-sect">
@@ -66,7 +66,7 @@
                 </v-menu>
                 <div class="d-flex flex-column namediv ">
                     <span class="name align-self-center mr-auto">{{ userName }} </span>
-                    <span class="nametitle">Manager</span>
+                    <span class="nametitle">{{ userRole }}</span>
                 </div>
           </v-row>
            </v-flex>
@@ -112,7 +112,7 @@ import Sidebar from './Sidebar.vue';
 import Notifications from './Notifications';
 export default {
   beforeCreate(){
-    if(!localStorage.getItem('token')){
+    if(!this.$store.state.userDetails){
       this.$router.replace('/');
     }
   },
@@ -142,8 +142,9 @@ export default {
       menuVisible: false,
       timeMode:3,
       dateRange:null,
-       userName: localStorage.getItem("userName"),
-            userRole: localStorage.getItem("userEmail")
+       userName: this.getUserDetails().Name,
+       userRole: this.getUserDetails().jobTitle,
+       userEmail: this.getUserDetails().Email
     }
   },
   

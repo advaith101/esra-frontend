@@ -1,9 +1,10 @@
 <template>
-<!-- <div class="header pa-0 ma-0"> -->
+<div class="header pa-0 ma-0">
 <!-- <div > -->
-  <v-col cols="12" class="pa-0">
+  <v-col cols="12" class="pa-0 ma-0">
+     
       <v-row style="margin-bottom:5px">
-          <v-flex lg9 xs12 sm7 >
+          <v-flex lg8 xs10 sm6 >
               
             <!-- <v-text-field
                         class="searchbar"            
@@ -19,28 +20,32 @@
             >Tempo
             <pre class="subTitle"> Esra Systems, LLC </pre></span
           >  -->
-          <div style="text-align:middle" class="title">
-           <img  width="150px"  :style="$vuetify.breakpoint.xsOnly ? 'margin-top:-4px':'margin-top:-5px'" :src="require('@/assets/logo.png')"/>
+           <div  class="title">
+           <img  width="150px" :style="$vuetify.breakpoint.xsOnly ? 'margin-top:-4px':'margin-top:-5px'" :src="require('@/assets/logo.png')"/>
           </div>
               
           </v-flex>
-          <v-flex lg2 sm2 >
+          <v-flex lg4 sm6 >
                <v-row >
-                   <v-spacer v-if="$vuetify.breakpoint.xsOnly"></v-spacer>
-                    <v-img max-height="30" max-width="30" :src="require('@/assets/icons/share.png')" class="img-buttons" />
-                    <v-img max-height="30" max-width="30" :src="require('@/assets/icons/print.png')" class="img-buttons" />
-                    <v-badge color="indigo" overlap :content="isNotif" :value="isNotif" offset-x="10" offset-y="17">
+                   <v-spacer></v-spacer>
+                    <!-- <v-img max-height="30" max-width="30" :src="require('@/assets/icons/share.png')" class="img-buttons" />
+                    <v-img max-height="30" max-width="30" :src="require('@/assets/icons/print.png')" class="img-buttons" /> -->
+                    <!-- <v-badge color="indigo" overlap :content="isNotif" :value="isNotif" offset-x="10" offset-y="17">
                         <v-img max-height="30" max-width="30" :src="require('@/assets/icons/notification.png')" class="img-buttons" @click="toggleNotif" v-show="!isNotif" />
                         <v-img max-height="30" max-width="30" :src="require('@/assets/icons/notification_active.png')" class="img-buttons" @click="toggleNotif" v-show="isNotif" />
-                    </v-badge>
-               </v-row>
-          </v-flex>
-            <v-flex lg1 sm2 v-show="!$vuetify.breakpoint.xsOnly" :style="$vuetify.breakpoint.mdOnly && 'margin-left:40px'" >
-              <v-row >                   
-                <v-menu nudge-bottom=55>
+                    </v-badge> -->
+               
+          <!-- </v-flex>
+            <v-flex lg1 sm2 v-show="!$vuetify.breakpoint.xsOnly" :style="$vuetify.breakpoint.mdOnly && 'margin-left:40px'" > -->
+              <v-flex  class="d-flex flex-row-reverse " style="padding-right:30px"  :style="$vuetify.breakpoint.md && 'margin-left:40px'" >                   
+                  <div class="d-flex flex-column namediv " v-if="!$vuetify.breakpoint.xsOnly">
+                    <span class="name align-self-center mr-auto">{{ userName }} </span>
+                    <span class="nametitle">{{ userRole }}</span>
+                </div>
+                <v-menu nudge-bottom=55 v-if="!$vuetify.breakpoint.xsOnly">
                     <template v-slot:activator="{ on }">
                         <v-btn icon v-on="on">
-                            <v-avatar style="margin-right:10px;top:9px">          
+                            <v-avatar style="margin-left: auto;top:7px">          
                                 <img src="https://randomuser.me/api/portraits/women/81.jpg">           
                             </v-avatar>
                         </v-btn>
@@ -50,11 +55,12 @@
                             <v-avatar style="margin-right:10px;top:7px">          
                                 <img src="https://randomuser.me/api/portraits/women/81.jpg">           
                             </v-avatar>
-                           <div class="d-flex flex-column namediv ">
+                           <div class="d-flex flex-column namediv " style="margin-top:5%">
                             <span class="name align-self-center mr-auto">{{ userName}} </span>
-                            <span class="nametitle">{{ userRole}}</span>
-                            <div class="myaccount">
-                                <v-row class="row1">
+                            <span class="nametitle">{{ userEmail}}</span>
+                            
+                            <v-flex lg12 xs12 class="myaccount">
+                                <v-row >
                                     <div class="button-sect">
                                         <v-btn class="text-caption button white--text" color="#144584" @click="gotoprofile()" small dark>My Account</v-btn>
                                             <v-btn
@@ -67,36 +73,39 @@
                                             >
                                     </div>
                                 </v-row>
-                            </div>
+                            </v-flex>
+                            
                           </div>
                         </v-card-actions>
                     </v-card>
                 </v-menu>
-                <div class="d-flex flex-column namediv ">
-                    <span class="name align-self-center mr-auto">{{ userName }} </span>
-                    <span class="nametitle">Manager</span>
-                </div>
+                 <v-badge color="indigo" overlap :content="isNotif" :value="isNotif" offset-x="10" offset-y="17">
+                        <v-img max-height="30" max-width="30" :src="require('@/assets/icons/notification.png')" class="img-buttons" @click="toggleNotif" v-show="!isNotif" />
+                        <v-img max-height="30" max-width="30" :src="require('@/assets/icons/notification_active.png')" class="img-buttons" @click="toggleNotif" v-show="isNotif" />
+                    </v-badge>
+              </v-flex>
               </v-row>
         </v-flex>
         </v-row>
     </v-col>
     <!-- </div> -->
-<!-- </div> -->
+</div>
 </template>
 
 <script>
 
 export default {
-    mounted(){
-        this.userName = localStorage.getItem("userName")
-    },
+    // mounted(){
+    //     this.userName = localStorage.getItem("userName")
+    // },
     props: ['isNotif'],
     data (){ 
         return {
             showNotification:true,
             searchString: "",
-            userName: "",
-            userRole: localStorage.getItem("userEmail")
+            userName: this.getUserDetails().Name,
+       userRole: this.getUserDetails().jobTitle,
+       userEmail: this.getUserDetails().Email
         }
     },
     methods: {
@@ -131,7 +140,7 @@ export default {
 <style scoped>
 .header {
 /* box-shadow: 0px 4px 32px rgba(0, 49, 104, 0.05); */
-height: 78px;
+height: 50px !important;
 width: 100%!important;
 background-color: #FAFAFA!important;
 
@@ -167,22 +176,27 @@ border-radius: 4px;
 .img-buttons {
     cursor: pointer;
     vertical-align: middle;
-    top: 6.5px;
-    margin-left: 10px;
+    top: 9px;
+    margin-left: 0px;
+    margin-right: 20px
 }
 .myaccount {   
 display: flex;
-flex-direction: row;
+flex-direction: column;
 justify-content: flex-start;
+align-content: flex-start;
 top: 80px;
 font-size: 8px;
-position: absolute;
-width: 250px;
+position: fixed;
+width: 100%;
+margin: auto;
+
 }
 
 .title {
-  left: 30px;
-  
+  display: flex;
+  align-items: center;
+  justify-content: center;
   /* top: 30px; */
   /* bottom: 28px; */
   font-family: Righteous;
@@ -191,6 +205,7 @@ width: 250px;
   font-size: 30px;
   /* line-height: 37px; */
   color: #144584;
+  margin-left:50px;
 }
 .subTitle {
   top: 29px;
@@ -211,8 +226,10 @@ width: 250px;
 }
 
 .namediv {
-   margin-top: 5%;
-   margin-left: 15px;     
+   margin-top: 2%;
+   margin-left: 15px; 
+   align-self: flex-start;    
+   justify-content: flex-end;
 }
 .name {
     font-family: Open Sans;
@@ -221,6 +238,7 @@ font-weight: bold;
 font-size: 14px;
 align-self: center;
 color: #202031;
+text-overflow: ellipsis !important;
 }
 .nametitle {
     font-family: Open Sans;
@@ -232,9 +250,10 @@ color: #6B6B81;
 .button-sect {
     display: flex;
     flex-direction: row;
-    align-items: center;
-    padding-left: -10px;
-    margin-left: -30px;
+    justify-content: space-around; 
+    
+     padding-left: -10px;
+    margin-left: -40px;
   }
 
   .button {

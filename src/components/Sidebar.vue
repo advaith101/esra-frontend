@@ -1,5 +1,5 @@
 <template>
-  <v-card style="margin-top: 5px; border-right: none">
+  <v-card style="margin-top: 0px; border-right: none">
     <div>
       <v-col cols="12">
         <v-row style="margin-top: -5px">
@@ -55,7 +55,7 @@
             <v-btn
               color="#144584"
               class="white--text"
-              width="130px"
+              width="180px"
               height="40px"
               style="font-size: 12px;text-align:center"
               v-bind="attrs"
@@ -72,8 +72,8 @@
              <v-dialog v-model="showInvite" max-width="500">
             <template v-slot:activator="{ on, attrs }">
               <!-- <v-avatar size="20" color="red"> -->
-                <v-btn v-bind="attrs" v-on="on" color="transparent" text style="width:120px">
-              <v-icon size="32"  right  color="#144584" 
+                <v-btn v-bind="attrs" v-on="on" color="transparent" text >
+              <v-icon size="32"  right  color="#144584" style="margin-left:-15px"
               >mdi-account-multiple-plus</v-icon>
                 </v-btn>
               <!-- </v-avatar> -->
@@ -269,12 +269,17 @@ export default {
       if (this.$store.state.selectedEntities.length) {
         entitiesInStore = true;
       }
+      if (localStorage.getItem("colors")) {
+      this.colors = JSON.parse(localStorage.getItem("colors"));
+       this.assignedColors =  JSON.parse(localStorage.getItem("assignedColors"));
+      }
       if(
         localStorage.getItem("selectedItems") !== null &&
         localStorage.getItem("selectedItems") !== undefined
       ){
         this.selectedItems= JSON.parse(localStorage.getItem("selectedItems"))
       }
+      
       if (
         localStorage.getItem("selectedEntities") !== null &&
         localStorage.getItem("selectedEntities") !== undefined
@@ -287,10 +292,17 @@ export default {
         if (!entitiesInStore) {
           localStorage.removeItem("selectedEntities");
         }
+       // debugger;
+        
         selectedEntities.forEach((entity) => {
           if (entity.type === "user") {
             // this.selectedUsers.push(entity);
             var user = this.allUsers.filter((x) => x.UserID === entity.id)[0];
+             user.color = entity.color;
+           // this.assignedColors.push(user.color);
+           // debugger;
+           // var index = this.colors.findIndex(x => x === user.color);
+      // this.colors.splice(index, 1);
             this.crudUser(user, entitiesInStore);
             var index
             this.selectedUsersforManager.forEach((x,i)=>{
@@ -332,7 +344,7 @@ export default {
         { id: "activetime", title: "Active" },
         { id: "idletime", title: "Idle" },
         { id: "output", title: "Contribution" },
-        { id: "activity", title: "Interaction" },
+        { id: "activity", title: "Engagement" },
         { id: "tempo", title: "Tempo" },
         { id: "composite", title: "Composite" },
       ],
@@ -366,7 +378,7 @@ export default {
       return this.selectedUsers.map((item) => { return item.UserID})
     },
     selectedTeams:function(){
-      return this.selectedItems.filter((user)=>{ return user.type=='team' })
+      return this.selectedItems.filter((user)=>{ return user.type ==='team' })
     },
     selectedUsersforManager:function(){
        return this.selectedItems.filter((user)=>{return ((user.type=='user') && !(this.userids.includes(user.UserID)))})
@@ -382,10 +394,11 @@ export default {
     selectedUsers:function(){
      // console.log('entities:',this.userids)
     },
-    selectedTeams:function(){
-     // console.log(this.selectedTeams)
-    },
+    // selectedTeams:function(){
+    //  // console.log(this.selectedTeams)
+    // },
     selectedItems:function(){
+      //debugger;
       localStorage.setItem("selectedItems",JSON.stringify(this.selectedItems));
     },
     filteredUsers: function () {
@@ -443,10 +456,15 @@ export default {
         );
         if (existingIndex < 0) {
           this.bufferTeams.push(value[value.length - 1]);
+          if (!value[value.length - 1].color) { 
           this.pushAssignedColor();
           value[value.length - 1].color = this.assignedColors[
             this.assignedColors.length - 1
           ];
+         // debugger;
+         //  const item = this.selectedItems.filter(x => x.type === "team" && x.TeamID === value[value.length - 1].TeamID);
+          // item.color = value[value.length - 1].color;
+          }
           // var self = this.$refs;
           // setTimeout(() => {
           //    self.teamPanel[0].$el.style.border = '2px solid '+ value[value.length -1].color;
@@ -458,6 +476,16 @@ export default {
         }
         this.changeStore(value[value.length - 1], "team");
       }
+      localStorage.setItem("selectedItems",JSON.stringify(this.selectedItems));
+      // this.selectedItems.filter(x => x.type === "team").forEach(element => {
+      //   const item = this.selectedTeams.filter(x => x.type === "team" && x.TeamID === element.TeamID);
+      //   if (item && item.length) {debugger;
+      //   element.color = item.color;
+      //   } else {
+      //     element.color = null;
+      //   }
+
+      // });
     },
   },
   mounted() {
@@ -487,7 +515,7 @@ export default {
       } else {
         this.addSelectedTeamNames();
       }
-      var itemids = this.selectedItems.map((item)=> {return item.UserID})
+     // var itemids = this.selectedItems.map((item)=> {return item.UserID})
       // console.log('item',itemids)
       // console.log(this.selectedItems[0])
       // console.log(this.selectedTeams[0])
@@ -495,18 +523,30 @@ export default {
     },
     addSelectedTeamNames() {
       this.selectedTeamNames = "";
-      this.selectedItems.forEach((element, index) => {
-        this.selectedTeamNames += index > 0 ? "," + element.Name : element.Name;
+      this.selectedItems.forEach((element, index) => {        
+        this.selectedTeamNames += index > 0 ? "," + element.Name : element.Name;       
+      });
+      
+      this.selectedUsers.forEach(element => {        
+        var exists = this.selectedItems.filter(x => x.UserID === element.UserID && x.type === "user");        
+        if (!exists || exists.length === 0) {
+          this.crudUser(element);
+        }
       });
     },
     popAssignedColor(entity) {
       this.colors.push(entity.color);
       var colorIndex = this.assignedColors.findIndex((x) => x === entity.color);
       this.assignedColors.splice(colorIndex, 1);
+      localStorage.setItem("colors", JSON.stringify(this.colors));
+      localStorage.setItem("assignedColors", JSON.stringify(this.assignedColors));
     },
     pushAssignedColor() {
       this.assignedColors.push(this.colors[0]);
       this.colors.splice(0, 1);
+      
+      localStorage.setItem("colors", JSON.stringify(this.colors));
+      localStorage.setItem("assignedColors", JSON.stringify(this.assignedColors));
     },
     removeTeam(teamID) {
       var index = this.selectedItems.findIndex((x) => x.TeamID === teamID);
@@ -556,7 +596,7 @@ export default {
         post_data["teamID"] = this.toaddteam;
         post_data["isNew"] = 0; 
       }
-      post_data["managerID"] = localStorage.getItem('userid');
+      post_data["managerID"] = this.getUserDetails().UserID;
       post_data["userIDs"] = arr;
       try {
         var res = await this.$apiService.post(
@@ -661,7 +701,7 @@ export default {
         var res = await this.$apiService.post("users/getAllEmployeesAndTeams", {
           mode: this.selectedMode,
           timeMode: this.timeMode,
-          managerID: localStorage.getItem('userid'),
+          managerID: this.getUserDetails().UserID,
         });
         if (res.status == 200) {
         //  debugger;
@@ -669,6 +709,7 @@ export default {
 // this.entities.push(res.data.result[res.data.result -1]);
 //           } else {
           this.entities = res.data.result;
+          this.entities = this.entities.sort((a, b) => a.type.localeCompare(b.type));
           //}
          // console.log(this.entities.length);
         }
@@ -679,7 +720,7 @@ export default {
         var res = await this.$apiService.post(
           "/common/getAllTeamsWithMembers",
           {
-            managerID: localStorage.getItem('userid'),
+            managerID: this.getUserDetails().UserID,
           }
         );
         if (res.status == 200) {
@@ -735,12 +776,19 @@ this.selectedTeams.forEach(team => {//debugger;
             this.selectedUsersforManager.splice(index1, 1);
           }
         });
+       // debugger;
+        if (!user.color || user.color === 'white') {         
         this.pushAssignedColor();
         user.color = this.assignedColors[this.assignedColors.length - 1];
+        }
         this.allUsers = this.selectedUsers.concat(this.users);
         if (!entitiesInStore) {
           this.changeStore(user, "user");
-        }
+         }
+        //  else { 
+        //   var store ={id: user.UserID, color:user.color};
+        //   this.$store.commit("changeColor", store);
+        // }
         this.updateUserColorinTeam(user);
       }
     },

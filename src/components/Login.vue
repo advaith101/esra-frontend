@@ -34,7 +34,7 @@
                  <span class="forgotpassword" style="cursor:pointer">Forgot Password?</span>
                  </div>
                  <br/>
-                 <v-btn style="margin-top:10px" color="indigo" dark @click="validate">Login</v-btn>
+                 <v-btn style="margin-top:0px" color="indigo" dark @click="validate">Login</v-btn>
             </v-form>
         </v-card>
           </v-col>
@@ -70,12 +70,19 @@ export default {
                             email:this.userName,
                             password:this.pwd
                         });
-                    localStorage.setItem('userid',res.data.user.UserID)
-                    localStorage.setItem('token',res.data.token);
-                    localStorage.setItem('refreshtoken',res.data.refreshToken);
-                    localStorage.setItem('userName',res.data.user.Name)
-                    localStorage.setItem('userEmail',this.userName)
+                    if(res.status === 200) {
+              var result = res.data;       
+                        const userData = {...result.user,token:result.token,refreshToken:result.refreshToken};
+            
+               this.$store.commit('setUserDetails', userData);
+              // this.$store.commit("resetState")
+                    // localStorage.setItem('userid',res.data.user.UserID)
+                    // localStorage.setItem('token',res.data.token);
+                    // localStorage.setItem('refreshtoken',res.data.refreshToken);
+                    // localStorage.setItem('userName',res.data.user.Name)
+                    // localStorage.setItem('userEmail',this.userName)
                     this.$router.replace('/home');
+                    }
                     
                 }
                 catch(error){ console.log(error); }

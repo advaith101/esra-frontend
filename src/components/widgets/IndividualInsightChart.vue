@@ -12,7 +12,7 @@
       <div v-for="i in insightNumber" :key="i">
         <apexchart
           type="line"
-          height="333"
+          height="336"
           width="100%"
           :options="insightOptions[i-1]"
           :series="insightChartSeries[i-1]"
@@ -22,7 +22,7 @@
     <apexchart
       v-if="insightNumber < 1"
       type="line"
-      height="333"
+      height="336"
       :options="insightOptionsCommon"
       :series="series"
     ></apexchart>
@@ -54,7 +54,7 @@ export default {
       insightOptions: [],
       insightOptionsCommon: {
         chart: {
-          height: 333,
+          height: 336,
           type: "line",
           toolbar: {
             show: false,
@@ -92,7 +92,8 @@ export default {
               color: "#828288",
               fontSize: "10px",
               fontFamily: "Open Sans",
-            },
+            },     
+               
           },
         },
         xaxis: {
@@ -279,6 +280,11 @@ props: ['selectedEntities','dateRange','timeMode','selectedApps','graphMode'],
                     colors:colors,
                     yaxis: [{
                       ...this.insightOptionsCommon.yaxis,
+                      max:100,
+                      labels: {
+                        formatter: function(val) {
+        return val.toFixed(0);
+      }},
                       title: {
                         text: this.chartData["insight" + insightCount][
                           "yaxisTitle0"
@@ -302,6 +308,11 @@ props: ['selectedEntities','dateRange','timeMode','selectedApps','graphMode'],
                   // yaxis=[{...this.insightOptions[insightCount].yaxis},]}
                   this.insightOptions[insightCount].yaxis.push({
                     ...this.insightOptionsCommon.yaxis,
+                    max:100,
+                    labels: {
+                        formatter: function(val) {
+        return val.toFixed(0);
+      }},
                       opposite: true,
                       title: {
                         text: this.chartData["insight" + insightCount][

@@ -39,9 +39,9 @@
 export default {
     data() {
         return {
-            first_name: 'Margarett',
+            first_name: localStorage.getItem("userName"),
             last_name: 'Bakharan',
-            email: 'Margarett.Bakharan@esra.com',
+            email: this.getUserDetails().Email,
             password: '',
             re_password: ''
         }

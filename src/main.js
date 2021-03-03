@@ -30,9 +30,12 @@ Vue.filter('formatDate', function(value) {
 httpservice.defaults.timeout = 100000;
 httpservice.interceptors.request.use((config) => {  
   // store.commit('SET_IS_LOADING', true);
-  const token = localStorage.getItem('token');
-  if(token) {
-    config.headers['Authorization'] = `Bearer ${token}`;
+  // const token = localStorage.getItem('token');
+  // if(token) {
+   // config.headers['Authorization'] = `Bearer ${token}`;
+   config.headers = {
+    Authorization: "Bearer " + store.getters.userDetails.token,
+   // requestedBy: store.getters.userDetails.email
   }
   return config
 }, (error) => {
@@ -45,22 +48,22 @@ httpservice.interceptors.response.use((response) => {
 }, (error) => { 
   const originalRequest = error.config;
   store.commit('SET_IS_LOADING', false);
-   if (error.response.status === 403 && originalRequest.url === 
-          'http://localhost:3000/home') {
+   if (error.response.status === 401) {
        router.push('/');
        return Promise.reject(error);
    }
    if (error.response.status === 403 && !originalRequest._retry) {
        originalRequest._retry = true;
-       const refreshToken = localStorage.getItem('refreshToken');
+       const refreshToken = store.getters.userDetails.refreshToken;
        return httpservice.post('/users/renewtoken',
            {
                "refreshToken": refreshToken
            })
            .then(res => {
                if (res.status === 200) {
-                   localStorage.setItem('token',res.data.token);
-                   httpservice.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+                  // localStorage.setItem('token',res.data.token);
+                   store.getters.userDetails.token = res.data.token;
+                   httpservice.defaults.headers.common['Authorization'] = `Bearer ${store.getters.userDetails.token}`;
                    return httpservice(originalRequest);
                } 
            })

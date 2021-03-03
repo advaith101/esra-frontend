@@ -174,7 +174,7 @@ export default {
     password:null,
     roleID:2,
     hidePassword:true,
-    showOTPpopup:true,
+    showOTPpopup:false,
     rules: {required: (value) => !!value || "Required."},
     verificationCode:null,
    emailRules: [ v => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'Invalid Email address' ],

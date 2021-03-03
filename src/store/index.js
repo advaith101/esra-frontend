@@ -11,6 +11,7 @@ const getDefaultState = () => {
     isLoading: false,
     title: '',
     selectedEntities:[],
+    userDetails:[]
   }
 }
 
@@ -43,10 +44,17 @@ export default new Vuex.Store({
       // }, 100);
           
     },
+    changeColor(state,value) {
+      var item = state.selectedEntities.filter(x => x.id === value.id)[0];
+      item.color = value.color;
+    },
     resetState (state) {
       // Merge rather than replace so we don't lose observers
       // https://github.com/vuejs/vuex/issues/1118
-      Object.assign(state, getDefaultState())
+      state.selectedEntities = [];
+    },
+    setUserDetails(state,value) {
+      state.userDetails = value;
     }
     
   },
@@ -56,6 +64,9 @@ export default new Vuex.Store({
     },
     title(state) {
       return state.title;
+    },
+    userDetails(state) {
+      return state.userDetails;
     }
   },
   actions: {},

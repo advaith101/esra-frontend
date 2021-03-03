@@ -21,7 +21,7 @@
       <apexchart
         ref="activitychart"
         type="line"
-        height="295"
+        height="298"
         :options="activityOptions"
         :series="activityChartSeries"
       ></apexchart>
@@ -29,7 +29,7 @@
     <div v-else>
       <apexchart
         type="line"
-        height="295"
+        height="325"
         :series="series"
         :options="activityOptions"
       ></apexchart>
@@ -121,7 +121,7 @@ export default {
     };
   },
 
-  props: ["selectedEntities", "dateRange", "timeMode", "selectedApps", "mode"],
+  props: ["selectedEntities", "dateRange", "timeMode", "selectedApps", "mode","modeText"],
   // computed: {
   //   selectedEntities: function() {
   //     return this.$store.state.selectedEntities.map(x => Object.assign({},x));
@@ -286,6 +286,12 @@ export default {
               xaxis: {
                 ...this.activityOptions.xaxis,
                 type: "datetime",
+                //categories: [this.startDate,this.endDate],
+                // tickAmount: 10,
+              },
+               yaxis: {
+                ...this.activityOptions.yaxis,
+                title:{text:  `${this.modeText} Score`},
                 //categories: [this.startDate,this.endDate],
                 // tickAmount: 10,
               },

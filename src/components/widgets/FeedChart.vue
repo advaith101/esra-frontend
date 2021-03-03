@@ -105,7 +105,7 @@ export default {
 				userIDs: userIDs,
 				enddate: moment(this.dateRange.endDate).format("YYYY-MM-DD HH:mm:ss"),
 				startdate: moment(this.dateRange.startDate).format("YYYY-MM-DD HH:mm:ss"),
-				userID: localStorage.getItem("userid"),
+				userID: this.getUserDetails().UserID,
 			};
 			return reqPayload;
 		},
@@ -118,7 +118,7 @@ export default {
 			return message.includes("@") ? notificationImage : Image;
 		},
 		getUserName() {
-			return localStorage.getItem("userName");
+			return this.getUserDetails().Name;
 		},
 		updateSearchQuery(event) {
 			this.searchQuery = event.target.value;

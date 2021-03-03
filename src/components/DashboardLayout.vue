@@ -1,7 +1,7 @@
 <template>
 	<div class="pagelayout">
 		<div class="pagemargin">
-			<v-col cols="12" style="margin-left:5px">
+			<v-col cols="12" style="margin-left:5px;margin-top:-10px">
 				<v-row>
 					<v-flex lg3 xs11>
 						<v-autocomplete
@@ -22,7 +22,7 @@
 							</template>
 						</v-autocomplete>
 					</v-flex>
-					<v-flex lg4 xs12>
+					<v-flex lg5 md5 xs12>
 						<div class="filter">
 							<v-chip-group mandatory class="white--text" v-model="timeMode">
 								<v-chip
@@ -37,7 +37,7 @@
 							</v-chip-group>
 						</div>
 					</v-flex>
-					<v-flex lg3 v-if="timeMode === 5" style="height:42px;font-size:12px">
+					<v-flex lg3 v-if="timeMode === 5" style="height:42px;font-size:12px;" :style="$vuetify.breakpoint.xsOnly && 'margin-bottom:10px'">
 						<date-range-picker ref="picker" v-model="dateRange" :timePicker="true">
 							<template v-slot:input="picker">
 								{{ picker.startDate | formatDate }} -
@@ -47,7 +47,7 @@
 					</v-flex>
 				</v-row>
 			</v-col>
-			<v-col cols="12" style="margin-top:-20px">
+			<v-col cols="12" style="margin-top:-30px">
 				<v-row>
 					<v-flex lg7 xs12>
 						<div :class="{ panelrightmargin: $vuetify.breakpoint.mobile }">
@@ -80,7 +80,8 @@
 													:timeMode="timeMode"
 													:dateRange="dateRange"
 													:selectedApps="selectedApps"
-													:mode="selectedActivityforTotal"													
+													:mode="selectedActivityforTotal"
+													:modeText ="selectedActivityTextforTotal"													
 												/>
 											</div>
 											<div>
@@ -110,7 +111,7 @@
 							<!-- <v-expansion-panels accordion v-model="panelValue" @click.native.stop="panelValue = 0" class="panelborder elevation-0" :class="{ panelleftmargin: $vuetify.breakpoint.lgAndUp }">
 								<v-expansion-panel> -->
 									<v-card class="panelborder elevation-0" :class="{ panelleftmargin: $vuetify.breakpoint.lgAndUp }">
-										<v-card-title class="paneltitle cardtitle" style="min-height:62px;text-align:left"
+										<v-card-title class="paneltitle cardtitle" style="max-height:62px;text-align:left"
 										>{{ insightTitle }}
 										<div style="right:0;position:absolute;height:50px">
 										<v-menu nudge-bottom="25" >
@@ -373,6 +374,20 @@ export default {
 	},
 	mounted() {
 		this.selectedEntities = this.$store.state.selectedEntities;
+	// 	 this.$watch(vm => [vm.selectedEntities],(val) => {
+      
+    //  this.selectedEntities = this.$store.state.selectedEntities;
+	// 		this.selectedEntitiesforActivity = this.selectedEntities.map((x) => Object.assign({}, x));
+	// 		this.selectedEntitiesforRadar = this.selectedEntities.map((x) => Object.assign({}, x));
+	// 		this.loadIndividualInsightData();
+	// 		this.loadDocumentInsightData();
+	// 		this.loadComparisonChartData();
+	// 		//  this.selectedEntitiesforInsight =this.$store.state.selectedEntities;
+	// 		this.selectedforComparison = this.$store.state.selectedEntities;  
+    // }, {
+    // //  immediate: true, // run immediately
+    //   deep: true // detects changes inside objects. not needed here, but maybe in other cases
+    // }) 
 	},
 	props: ["mode"],
 	watch: {
@@ -434,15 +449,15 @@ export default {
 			selectedEntitiesforComparison: [],
 			activities: [
 				{ id: "output", title: "Contribution", color: "#202031" },
-				{ id: "activity", title: "Interaction", color: "#144584" },
+				{ id: "activity", title: "Engagement", color: "#144584" },
 				{ id: "activetime", title: "Active Time", color: "#202031" },
 				{ id: "idletime", title: "Idle Time", color: "#202031" },
 				{ id: "composite", title: "Composite", color: "#202031" },
 			],
 			selectedActivityforRadar: "activity",
-			selectedActivityTextforRadar: "Interaction",
+			selectedActivityTextforRadar: "Engagement",
 			selectedActivityforTotal: "activity",
-			selectedActivityTextforTotal: "Interaction",
+			selectedActivityTextforTotal: "Engagement",
 			filterValues: [
 				{ value: 0, name: "1D" },
 				{ value: 1, name: "5D" },
