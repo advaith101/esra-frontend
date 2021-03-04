@@ -58,8 +58,8 @@
 										>Total
 
 										<v-menu max-width="150px">
-											<template v-slot:activator="{ on, attrs }" style="margin-left:100px;">
-												<v-btn x-small text class="menutexttotal"  color="tranparent" v-bind="attrs" v-on="on">
+											<template v-slot:activator="{ on, attrs }" >
+												<v-btn x-small text class="menutexttotal" color="tranparent" v-bind="attrs" v-on="on">
 													{{ selectedActivityTextforTotal }}
 													<img src="@/assets/icons/dropdown.png" style="cursor:pointer;" />
 												</v-btn>
@@ -117,7 +117,7 @@
 										<v-menu nudge-bottom="25" >
 											<template v-slot:activator="{ on, attrs }">
 												<v-btn x-small right text color="transparent" v-bind="attrs" v-on="on">
-													<img src="@/assets/icons/dropdown.png" style="cursor:pointer;" />
+													<img src="@/assets/icons/dropdown.png" style="cursor:pointer;margin-top:25px" />
 												</v-btn>
 											</template>
 											<v-list v-if="selectedEntities.length">
@@ -809,9 +809,9 @@ flex: 1 0 10% ;
 }
 .menutexttotal {
 	color: #828288;
-	left: 0;
-	position: fixed;
-	margin-left: 65px;
+	margin-left: -7px;
+	/* position: fixed;
+	margin-left: 65px; */
 	font-size: 14px;
 	margin-top: 0px;
 }
@@ -843,9 +843,10 @@ flex: 1 0 10% ;
     border-top-left-radius: inherit;
     border-top-right-radius: inherit;
     display: flex; */
-    font-size: 0.9375rem;
+    font-size: 13px;
     line-height: 1;
     min-height: 64px;
+	padding-right:25px;
     /* outline: none;
     padding: 16px 24px;
     position: relative;

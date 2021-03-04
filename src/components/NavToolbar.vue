@@ -46,14 +46,14 @@
                     <template v-slot:activator="{ on }">
                         <v-btn icon v-on="on">
                             <v-avatar style="margin-left: auto;top:7px">          
-                                <img src="https://randomuser.me/api/portraits/women/81.jpg">           
+                                <img :src= "`${getUserDetails().profilepic_path}`" />           
                             </v-avatar>
                         </v-btn>
                     </template>
                     <v-card width="250px" height="120px" >                       
                         <v-card-actions>
                             <v-avatar style="margin-right:10px;top:7px">          
-                                <img src="https://randomuser.me/api/portraits/women/81.jpg">           
+                                <img :src= "`${getUserDetails().profilepic_path}`">           
                             </v-avatar>
                            <div class="d-flex flex-column namediv " style="margin-top:5%">
                             <span class="name align-self-center mr-auto">{{ userName}} </span>

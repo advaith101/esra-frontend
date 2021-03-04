@@ -4,7 +4,7 @@
             <v-flex align-self-start>
                 <v-col>
                     <v-avatar size="200">
-                        <img src="https://randomuser.me/api/portraits/women/81.jpg">
+                        <img :src= "`${getUserDetails().profilepic_path}`">
                     </v-avatar>
                     <v-row justify="center">
                         <v-img max-height="30" max-width="30" contain :src="require('@/assets/icons/edit-1.png')" class="img-buttons" />
