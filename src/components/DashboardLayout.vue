@@ -299,7 +299,7 @@
 										>App
 
 										<v-menu max-width="150px">
-											<template v-slot:activator="{ on, attrs }" style="margin-left:100px">
+											<template v-slot:activator="{ on, attrs }" >
 												<v-btn x-small text class="menutext" color="tranparent" v-bind="attrs" v-on="on">
 													{{ selectedActivityTextforRadar }}
 													<img src="@/assets/icons/dropdown.png" style="cursor:pointer;" />
@@ -371,44 +371,45 @@ export default {
 			//this.selectedApps = this.apps.map((app) => app.applicationid)
 			//console.log(this.selectedApps)
 		}
-	},
-	mounted() {
-		this.selectedEntities = this.$store.state.selectedEntities;
-	// 	 this.$watch(vm => [vm.selectedEntities],(val) => {
+		//	this.selectedEntities = this.$store.state.selectedEntities;
+		 this.$watch(vm => [this.$store.state.selectedEntities],(val) => {
       
-    //  this.selectedEntities = this.$store.state.selectedEntities;
-	// 		this.selectedEntitiesforActivity = this.selectedEntities.map((x) => Object.assign({}, x));
-	// 		this.selectedEntitiesforRadar = this.selectedEntities.map((x) => Object.assign({}, x));
-	// 		this.loadIndividualInsightData();
-	// 		this.loadDocumentInsightData();
-	// 		this.loadComparisonChartData();
-	// 		//  this.selectedEntitiesforInsight =this.$store.state.selectedEntities;
-	// 		this.selectedforComparison = this.$store.state.selectedEntities;  
-    // }, {
-    // //  immediate: true, // run immediately
-    //   deep: true // detects changes inside objects. not needed here, but maybe in other cases
-    // }) 
-	},
-	props: ["mode"],
-	watch: {
-		selectedEntities: async function() {
-			//  if (this.$store.state.selectedEntities.length) {
-			//  this.focusEntitiesforinsight=[];
-			//  this.focusEntitiesforinsight.push(this.$store.state.selectedEntities[0]);
-			//  if (this.$store.state.selectedEntities.length > 1) {
-			//   this.focusEntitiesforinsight.push(this.$store.state.selectedEntities[1]);
-			//  }
-			// }
-			//this.selected = this.$store.state.selectedEntities;
-			this.selectedEntities = this.$store.state.selectedEntities;
+     this.selectedEntities = this.$store.state.selectedEntities;
 			this.selectedEntitiesforActivity = this.selectedEntities.map((x) => Object.assign({}, x));
 			this.selectedEntitiesforRadar = this.selectedEntities.map((x) => Object.assign({}, x));
 			this.loadIndividualInsightData();
 			this.loadDocumentInsightData();
 			this.loadComparisonChartData();
 			//  this.selectedEntitiesforInsight =this.$store.state.selectedEntities;
-			this.selectedforComparison = this.$store.state.selectedEntities;
-		},
+			this.selectedforComparison = this.$store.state.selectedEntities;  
+    }, {
+      immediate: true, // run immediately
+      deep: true // detects changes inside objects. not needed here, but maybe in other cases
+    }) 
+	},
+	mounted() {
+	
+	},
+	props: ["mode"],
+	watch: {
+		// selectedEntities: async function() {
+		// 	//  if (this.$store.state.selectedEntities.length) {
+		// 	//  this.focusEntitiesforinsight=[];
+		// 	//  this.focusEntitiesforinsight.push(this.$store.state.selectedEntities[0]);
+		// 	//  if (this.$store.state.selectedEntities.length > 1) {
+		// 	//   this.focusEntitiesforinsight.push(this.$store.state.selectedEntities[1]);
+		// 	//  }
+		// 	// }
+		// 	//this.selected = this.$store.state.selectedEntities;
+		// 	this.selectedEntities = this.$store.state.selectedEntities;
+		// 	this.selectedEntitiesforActivity = this.selectedEntities.map((x) => Object.assign({}, x));
+		// 	this.selectedEntitiesforRadar = this.selectedEntities.map((x) => Object.assign({}, x));
+		// 	this.loadIndividualInsightData();
+		// 	this.loadDocumentInsightData();
+		// 	this.loadComparisonChartData();
+		// 	//  this.selectedEntitiesforInsight =this.$store.state.selectedEntities;
+		// 	this.selectedforComparison = this.$store.state.selectedEntities;
+		// },
 		timeMode() {
 			if (this.timeMode !== 5) {
 				this.$emit("timeModeChanged", this.timeMode);
@@ -800,10 +801,8 @@ flex: 1 0 10% ;
 	line-height: 25px;
 }
 .menutext {
-	color: #828288;
-	left: 0;
-	position: absolute;
-	margin-left: 35px;
+	color: #828288;	
+	margin-left: -7px;
 	font-size: 14px;
 	margin-top: 3px;
 }

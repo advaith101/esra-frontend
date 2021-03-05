@@ -75,7 +75,7 @@ export default {
                         const userData = {...result.user,token:result.token,refreshToken:result.refreshToken};
             
                this.$store.commit('setUserDetails', userData);
-              // this.$store.commit("resetState")
+               this.$store.commit("resetState")
                     // localStorage.setItem('userid',res.data.user.UserID)
                     // localStorage.setItem('token',res.data.token);
                     // localStorage.setItem('refreshtoken',res.data.refreshToken);
