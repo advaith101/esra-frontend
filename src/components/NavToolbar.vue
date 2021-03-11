@@ -194,18 +194,14 @@ margin: auto;
 }
 
 .title {
-  display: flex;
+  /* display: flex;
   align-items: center;
-  justify-content: center;
-  /* top: 30px; */
-  /* bottom: 28px; */
-  font-family: Righteous;
-  font-style: normal;
-  font-weight: bolder;
-  font-size: 30px;
-  /* line-height: 37px; */
+  justify-content: center;  
   color: #144584;
-  margin-left:50px;
+  margin-left:50px; */
+
+  left:33%;
+  position:fixed;
 }
 .subTitle {
   top: 29px;
@@ -261,4 +257,9 @@ color: #6B6B81;
     padding: 0px 25px;
     margin-right: 10px;
   }
+ @media (max-width: 1000px) {
+     .title{
+         left:30%;
+     }
+ } 
 </style>
